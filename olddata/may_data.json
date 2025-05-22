@@ -1,0 +1,3471 @@
+{
+  "stats": {
+    "total_paragraphs": 4778,
+    "total_tables": 428,
+    "non_empty_paragraphs": 1734
+  },
+  "paragraphs": [
+    {
+      "index": 4,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 5,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 6,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 7,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 12,
+      "text": "TRANSACTI ON DATE",
+      "length": 17
+    },
+    {
+      "index": 13,
+      "text": "CLEARING DATE",
+      "length": 13
+    },
+    {
+      "index": 14,
+      "text": "PARTICULARS\tCHQ NO",
+      "length": 18
+    },
+    {
+      "index": 15,
+      "text": "IN\tOUT\t\tTOTAL BALANCE",
+      "length": 21
+    },
+    {
+      "index": 16,
+      "text": "TXN",
+      "length": 3
+    },
+    {
+      "index": 19,
+      "text": "*OPENING BALANCE*\t2,755.12",
+      "length": 26
+    },
+    {
+      "index": 26,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 27,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 28,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 29,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 37,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 38,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 39,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 40,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 48,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 49,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 50,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 51,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 59,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 60,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 61,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 62,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 70,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 71,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 72,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 73,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 81,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 82,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 83,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 84,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 92,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 93,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 94,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 95,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 103,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 104,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 105,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 106,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 114,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 115,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 116,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 117,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 125,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 126,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 127,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 128,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 136,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 137,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 138,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 139,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 147,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 148,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 149,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 150,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 158,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 159,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 160,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 161,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 169,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 170,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 171,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 172,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 180,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 181,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 182,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 183,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 191,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 192,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 193,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 194,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 202,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 203,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 204,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 205,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 213,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 214,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 215,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 216,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 224,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 225,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 226,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 227,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 235,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 236,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 237,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 238,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 246,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 247,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 248,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 249,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 257,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 258,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    },
+    {
+      "index": 259,
+      "text": "012000038956",
+      "length": 12
+    },
+    {
+      "index": 260,
+      "text": "Mwananchi Account(KES)",
+      "length": 22
+    },
+    {
+      "index": 268,
+      "text": "ACCOUNT NAME: CUSTOMER NO.: ACCOUNT NO.: ACCOUNT TYPE:",
+      "length": 54
+    },
+    {
+      "index": 269,
+      "text": "WASHA ENTERPRISES 001635477",
+      "length": 27
+    }
+  ],
+  "tables": [
+    {
+      "index": 0,
+      "rows": 11,
+      "columns": 6,
+      "data": [
+        [
+          "03-JAN-\n2025",
+          "03-JAN-\n2025",
+          "Paybill Credit TA36TIJWA8-71710006 From 254717100064\nKEVIN OMONDI Alias",
+          "800.00",
+          "3,555.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "06-JAN-\n2025",
+          "06-JAN-\n2025",
+          "Paybill Credit\nTA615PQI61-72670395",
+          "500.00",
+          "4,055.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "06-JAN-\n2025",
+          "06-JAN-\n2025",
+          "Paybill Credit\nTA6565S99D-72670395",
+          "500.00",
+          "4,555.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "07-JAN-\n2025",
+          "07-JAN-\n2025",
+          "Paybill Credit\nTA70CP473E-72670395",
+          "300.00",
+          "4,855.12",
+          "012"
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "rows": 15,
+      "columns": 6,
+      "data": [
+        [
+          "08-JAN-\n2025",
+          "08-JAN-\n2025",
+          "Paybill Credit TA85F26SNV-72545039 From 254725450395\nJOYCE AKINYI Alias Code",
+          "50.00",
+          "4,905.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "08-JAN-\n2025",
+          "08-JAN-\n2025",
+          "Paybill Credit\nTA87GV4M1X-70503642",
+          "\n1,000.00",
+          "5,905.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254705036424",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "IRENE AKINYI Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "08-JAN-\n2025",
+          "08-JAN-\n2025",
+          "Paybill Credit\nTA89H65FMJ-72670395",
+          "300.00",
+          "6,205.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "10-JAN-\n2025",
+          "09-JAN-\n2025",
+          "Paybill Credit\nTA90LIDEOK-72670395",
+          "300.00",
+          "6,505.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "10-JAN-\n2025",
+          "10-JAN-\n2025",
+          "Paybill Credit\nTAA8NUS1NS-72670395",
+          "300.00",
+          "6,805.12",
+          "012"
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "rows": 15,
+      "columns": 6,
+      "data": [
+        [
+          "11-JAN-\n2025",
+          "10-JAN-\n2025",
+          "Paybill Credit TAA9PJFIB1-70503642 From 254705036424\nIRENE AKINYI Alias Code",
+          "667.00",
+          "7,472.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "13-JAN-\n2025",
+          "11-JAN-\n2025",
+          "Paybill Credit\nTAB4SVBTP0-72670395",
+          "300.00",
+          "7,772.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "13-JAN-\n2025",
+          "13-JAN-\n2025",
+          "Paybill Credit\nTAC1VHVGZL-72670395",
+          "300.00",
+          "8,072.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "13-JAN-\n2025",
+          "13-JAN-\n2025",
+          "Paybill Credit\nTAC3YNLUN7-72935661",
+          "700.00",
+          "8,772.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254729356613 TOM",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "DAVID Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "13-JAN-\n2025",
+          "13-JAN-\n2025",
+          "Paybill Credit\nTAD21XRIZS-71570204",
+          "300.00",
+          "9,072.12",
+          "012"
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "rows": 15,
+      "columns": 6,
+      "data": [
+        [
+          "13-JAN-\n2025",
+          "13-JAN-\n2025",
+          "Paybill Credit TAD62CJ4YU-72670395 From 254726703953\nLINNET AWUOR Alias",
+          "300.00",
+          "9,372.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "14-JAN-\n2025",
+          "13-JAN-\n2025",
+          "Paybill Credit\nTAD03DZTIC-75864961",
+          "\n1,000.00",
+          "10,372.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254758649616",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Dorothy Awino Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "14-JAN-\n2025",
+          "13-JAN-\n2025",
+          "Paybill Credit\nTAD33GXB3R-70503642",
+          "667.00",
+          "11,039.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254705036424",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "IRENE AKINYI Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "14-JAN-\n2025",
+          "14-JAN-\n2025",
+          "Paybill Credit\nTAE740M1DH-71712341",
+          "500.00",
+          "11,539.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254717123417",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "ROSELYNE RIOBA Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "14-JAN-\n2025",
+          "14-JAN-\n2025",
+          "Paybill Credit\nTAE14TP107-71710006",
+          "\n2,500.00",
+          "14,039.12",
+          "012"
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "rows": 15,
+      "columns": 6,
+      "data": [
+        [
+          "14-JAN-\n2025",
+          "14-JAN-\n2025",
+          "Paybill Credit TAE75MCQL1-72670395 From 254726703953\nLINNET AWUOR Alias",
+          "300.00",
+          "14,339.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "14-JAN-\n2025",
+          "14-JAN-\n2025",
+          "Paybill Credit\nTAE35TV33R-72935661",
+          "300.00",
+          "14,639.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254729356613 TOM",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "DAVID Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "14-JAN-\n2025",
+          "14-JAN-\n2025",
+          "Paybill Credit\nTAE364MX2B-72545039",
+          "\n2,300.00",
+          "16,939.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254725450395",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "JOYCE AKINYI Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "14-JAN-\n2025",
+          "14-JAN-\n2025",
+          "Paybill Credit\nTAE26J5520-72806362",
+          "700.00",
+          "17,639.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254728063628",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Brenda Nekesa Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "14-JAN-\n2025",
+          "14-JAN-\n2025",
+          "Paybill Credit\nTAE76U6DFR-71764708",
+          "\n1,000.00",
+          "18,639.12",
+          "012"
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "rows": 17,
+      "columns": 6,
+      "data": [
+        [
+          "15-JAN-\n2025",
+          "15-JAN-\n2025",
+          "Paybill Credit TAF29OI59W-72670395 From 254726703953\nLINNET AWUOR Alias",
+          "300.00",
+          "18,939.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "15-JAN-\n2025",
+          "15-JAN-\n2025",
+          "Paybill Credit\nTAF7AIOZ19-70234793",
+          "\n1,000.00",
+          "19,939.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254702347930",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "PATIENCE LUNDI Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "16-JAN-\n2025",
+          "15-JAN-\n2025",
+          "Paybill Credit\nTAF7B3CGN7-74023131",
+          "\n1,000.00",
+          "20,939.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254740231316",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "FRANCIS ALIETH Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "16-JAN-\n2025",
+          "15-JAN-\n2025",
+          "Paybill Credit\nTAF4BIH6KW-71843567",
+          "500.00",
+          "21,439.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254718435673 mary",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "awino Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "16-JAN-\n2025",
+          "15-JAN-\n2025",
+          "Paybill Credit\nTAF1BJFABP-70422312",
+          "\n1,000.00",
+          "22,439.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254704223127",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "EUNICE ACHIENG Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "rows": 17,
+      "columns": 6,
+      "data": [
+        [
+          "16-JAN-\n2025",
+          "15-JAN-\n2025",
+          "Paybill Credit TAF5BS4DNV-70503642 From 254705036424\nIRENE AKINYI Alias Code",
+          "667.00",
+          "23,106.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "16-JAN-\n2025",
+          "16-JAN-\n2025",
+          "Paybill Credit\nTAG0CJYVHM-11533734",
+          "\n1,000.00",
+          "24,106.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254115337341",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "JORIM OLUOCH Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "16-JAN-\n2025",
+          "16-JAN-\n2025",
+          "Paybill Credit\nTAG7F6EJGH-72670395",
+          "300.00",
+          "24,406.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "17-JAN-\n2025",
+          "17-JAN-\n2025",
+          "Paybill Credit\nTAH0IK691Q-71843567",
+          "300.00",
+          "24,706.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254718435673 mary",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "awino Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "17-JAN-\n2025",
+          "17-JAN-\n2025",
+          "Paybill Credit\nTAH0IXPCIY-75864961",
+          "600.00",
+          "25,306.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254758649616",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Dorothy Awino Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "rows": 17,
+      "columns": 6,
+      "data": [
+        [
+          "18-JAN-\n2025",
+          "17-JAN-\n2025",
+          "Paybill Credit TAH9JIK26J-79068954 From 254790689540\nMUZAFARU OMONDI",
+          "\n1,000.00",
+          "26,306.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "18-JAN-\n2025",
+          "17-JAN-\n2025",
+          "Paybill Credit\nTAH2JZ6CHI-71764708",
+          "\n1,000.00",
+          "27,306.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254717647089",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Jenipher Auma Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "18-JAN-\n2025",
+          "17-JAN-\n2025",
+          "Paybill Credit\nTAH2KGLCJO-70234793",
+          "300.00",
+          "27,606.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254702347930",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "PATIENCE LUNDI Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "18-JAN-\n2025",
+          "18-JAN-\n2025",
+          "Paybill Credit\nTAI1M5RWSH-72670395",
+          "300.00",
+          "27,906.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "20-JAN-\n2025",
+          "20-JAN-\n2025",
+          "Paybill Credit\nTAI2OYHDVI-74023131",
+          "657.00",
+          "28,563.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254740231316",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "FRANCIS ALIETH Alias",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "rows": 17,
+      "columns": 6,
+      "data": [
+        [
+          "20-JAN-\n2025",
+          "20-JAN-\n2025",
+          "Paybill Credit TAJ5S22701-72670395 From 254726703953\nLINNET AWUOR Alias",
+          "300.00",
+          "28,863.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "20-JAN-\n2025",
+          "20-JAN-\n2025",
+          "Paybill Credit\nTAJ5SX19HR-75864961",
+          "600.00",
+          "29,463.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254758649616",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Dorothy Awino Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "20-JAN-\n2025",
+          "20-JAN-\n2025",
+          "Paybill Credit\nTAK6T5QA74-71712341",
+          "100.00",
+          "29,563.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254717123417",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "ROSELYNE RIOBA Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "20-JAN-\n2025",
+          "20-JAN-\n2025",
+          "Paybill Credit\nTAK3URD8LJ-72670395",
+          "300.00",
+          "29,863.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "21-JAN-\n2025",
+          "21-JAN-\n2025",
+          "Paybill Credit\nTAL6YA2TKQ-71190204",
+          "670.00",
+          "30,533.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254711902046",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "ANNETTE APONDI Alias",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "rows": 19,
+      "columns": 6,
+      "data": [
+        [
+          "22-JAN-\n2025",
+          "21-JAN-\n2025",
+          "Paybill Credit TAL81PI1FI-\n72670395 From",
+          "300.00",
+          "30,833.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "254726703953 LINNET",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "AWUOR Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "22-JAN-\n2025",
+          "22-JAN-\n2025",
+          "Paybill Credit\nTAM72KXO99-79068954",
+          "670.00",
+          "31,503.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254790689540",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "MUZAFARU OMONDI",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "22-JAN-\n2025",
+          "22-JAN-\n2025",
+          "Paybill Credit\nTAM34CZM2D-72670395",
+          "300.00",
+          "31,803.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "23-JAN-\n2025",
+          "22-JAN-\n2025",
+          "Paybill Credit\nTAM85XJ0W4-79068954",
+          "670.00",
+          "32,473.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254790689540",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "MUZAFARU OMONDI",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "23-JAN-\n2025",
+          "22-JAN-\n2025",
+          "Paybill Credit\nTAM763AN3R-70234793",
+          "667.00",
+          "33,140.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254702347930",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "PATIENCE LUNDI Alias",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "rows": 17,
+      "columns": 6,
+      "data": [
+        [
+          "23-JAN-\n2025",
+          "22-JAN-\n2025",
+          "Paybill Credit TAM06DS90Y-71190204 From 254711902046\nANNETTE APONDI Alias",
+          "670.00",
+          "33,810.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "23-JAN-\n2025",
+          "23-JAN-\n2025",
+          "Paybill Credit\nTAN48ZFTKC-72670395",
+          "300.00",
+          "34,110.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "24-JAN-\n2025",
+          "23-JAN-\n2025",
+          "Paybill Credit\nTAN49OUP06-70422312",
+          "\n1,000.00",
+          "35,110.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254704223127",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "EUNICE ACHIENG Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "24-JAN-\n2025",
+          "23-JAN-\n2025",
+          "Paybill Credit\nTAN29OWC1O-71709858",
+          "500.00",
+          "35,610.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254717098581",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LILIAN AKINYI Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "25-JAN-\n2025",
+          "24-JAN-\n2025",
+          "Paybill Credit\nTAO9DVLUGD-71190204",
+          "670.00",
+          "36,280.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254711902046",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "ANNETTE APONDI Alias",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "rows": 19,
+      "columns": 6,
+      "data": [
+        [
+          "25-JAN-\n2025",
+          "24-JAN-\n2025",
+          "Paybill Credit\nTAO3DXY9NB-71721417",
+          "\n1,000.00",
+          "37,280.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254717214171",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Mildred Awuor Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "25-JAN-\n2025",
+          "24-JAN-\n2025",
+          "Paybill Credit\nTAO2DZLTYU-74046209",
+          "\n1,000.00",
+          "38,280.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254740462091",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LAUREEN AMONDI Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "25-JAN-\n2025",
+          "25-JAN-\n2025",
+          "Paybill Credit\nTAP6H9J0WY-71843567",
+          "300.00",
+          "38,580.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254718435673 mary",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "awino Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "25-JAN-\n2025",
+          "25-JAN-\n2025",
+          "Paybill Credit\nTAP6HOWC0Q-79068954",
+          "670.00",
+          "39,250.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254790689540",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "MUZAFARU OMONDI",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "25-JAN-\n2025",
+          "25-JAN-\n2025",
+          "Paybill Credit\nTAP7HQ3QX7-72670395",
+          "300.00",
+          "39,550.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "rows": 20,
+      "columns": 6,
+      "data": [
+        [
+          "27-JAN-\n2025",
+          "25-JAN-\n2025",
+          "Paybill Credit\nTAP9HY9P8B-71764708",
+          "700.00",
+          "40,250.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254717647089",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Jenipher Auma Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "27-JAN-\n2025",
+          "25-JAN-\n2025",
+          "Paybill Credit\nTAP2I3YY9O-70234793",
+          "400.00",
+          "40,650.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254702347930",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "PATIENCE LUNDI Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "27-JAN-\n2025",
+          "27-JAN-\n2025",
+          "Paybill Credit\nTAQ1JN7F57-71712341",
+          "100.00",
+          "40,750.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254717123417",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "ROSELYNE RIOBA Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "27-JAN-\n2025",
+          "27-JAN-\n2025",
+          "Paybill Credit\nTAQ5MUNTE7-75864961",
+          "600.00",
+          "41,350.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254758649616",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Dorothy Awino Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "27-JAN-\n2025",
+          "27-JAN-\n2025",
+          "Paybill Credit\nTAR5O83UZF-70573663",
+          "\n1,000.00",
+          "42,350.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254705736634",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "EMILY AOKO Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198398",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 13,
+      "rows": 17,
+      "columns": 6,
+      "data": [
+        [
+          "27-JAN-\n2025",
+          "27-JAN-\n2025",
+          "Paybill Credit TAR0OU8CZG-72670395 From 254726703953\nLINNET AWUOR Alias",
+          "300.00",
+          "42,650.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "27-JAN-\n2025",
+          "27-JAN-\n2025",
+          "Paybill Credit\nTAR1QDE5R1-70503642",
+          "667.00",
+          "43,317.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254705036424",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "IRENE AKINYI Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "28-JAN-\n2025",
+          "27-JAN-\n2025",
+          "Paybill Credit\nTAR8QO8JOM-71021052",
+          "\n1,000.00",
+          "44,317.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254710210524",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "SARA OYUGI Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "28-JAN-\n2025",
+          "28-JAN-\n2025",
+          "Paybill Credit\nTAS7S0JNTD-70234793",
+          "500.00",
+          "44,817.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254702347930",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "PATIENCE LUNDI Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "28-JAN-\n2025",
+          "28-JAN-\n2025",
+          "Paybill Credit\nTAS5U5O51F-79511855",
+          "\n1,000.00",
+          "45,817.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254795118555",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "NANCY AKINYI Alias",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 14,
+      "rows": 17,
+      "columns": 6,
+      "data": [
+        [
+          "28-JAN-\n2025",
+          "28-JAN-\n2025",
+          "Paybill Credit TAS7UB95GV-71222451 From 254712224519\nPERIS MUTHONI Alias",
+          "500.00",
+          "46,317.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "28-JAN-\n2025",
+          "28-JAN-\n2025",
+          "Paybill Credit\nTAS4UCA98A-71190204",
+          "670.00",
+          "46,987.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254711902046",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "ANNETTE APONDI Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "28-JAN-\n2025",
+          "28-JAN-\n2025",
+          "Paybill Credit\nTAS7ULNHRT-75864961",
+          "300.00",
+          "47,287.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254758649616",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Dorothy Awino Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "29-JAN-\n2025",
+          "28-JAN-\n2025",
+          "Paybill Credit\nTAS8UMPQ1E-79068954",
+          "670.00",
+          "47,957.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254790689540",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "MUZAFARU OMONDI",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "29-JAN-\n2025",
+          "29-JAN-\n2025",
+          "Paybill Credit\nTAT0WG035O-72806362",
+          "\n2,000.00",
+          "49,957.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254728063628",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Brenda Nekesa Alias",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 15,
+      "rows": 19,
+      "columns": 6,
+      "data": [
+        [
+          "29-JAN-\n2025",
+          "29-JAN-\n2025",
+          "Paybill Credit\nTAT8Y4NTVC-72935661",
+          "\n2,000.00",
+          "51,957.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254729356613 TOM",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "DAVID Alias Code",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "30-JAN-\n2025",
+          "30-JAN-\n2025",
+          "Paybill Credit\nTAU92CA8ST-71190204",
+          "670.00",
+          "52,627.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254711902046",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "ANNETTE APONDI Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "30-JAN-\n2025",
+          "30-JAN-\n2025",
+          "Paybill Credit\nTAU22SDWNO-79068954",
+          "670.00",
+          "53,297.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254790689540",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "MUZAFARU OMONDI",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Alias Code 2198471",
+          "",
+          "",
+          ""
+        ],
+        [
+          "30-JAN-\n2025",
+          "30-JAN-\n2025",
+          "Paybill Credit\nTAU72SUDM7-72670395",
+          "\n2,600.00",
+          "55,897.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          ""
+        ],
+        [
+          "30-JAN-\n2025",
+          "30-JAN-\n2025",
+          "Paybill Credit\nTAU22TO4OE-72670395",
+          "700.00",
+          "56,597.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254726703953",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "LINNET AWUOR Alias",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 16,
+      "rows": 19,
+      "columns": 7,
+      "data": [
+        [
+          "30-JAN-\n2025",
+          "30-JAN-\n2025",
+          "Paybill Credit TAU63QDB6C-72552109 From 254725521098\nJUDITH ATIENO Alias",
+          "\n1,000.00",
+          "",
+          "57,597.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "31-JAN-\n2025",
+          "30-JAN-\n2025",
+          "Paybill Credit\nTAU94JV483-70234793",
+          "300.00",
+          "",
+          "57,897.12",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254702347930",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "PATIENCE LUNDI Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "31-JAN-\n2025",
+          "31-JAN-\n2025",
+          "Family Access Card\nCharge",
+          "",
+          "500.00",
+          "57,397.12",
+          "012"
+        ],
+        [
+          "31-JAN-\n2025",
+          "31-JAN-\n2025",
+          "Excise Duty",
+          "",
+          "75.00",
+          "57,322.12",
+          "012"
+        ],
+        [
+          "31-JAN-\n2025",
+          "31-JAN-\n2025",
+          "ATM Cash Withdrawal\n012000038956",
+          "",
+          "2,000.00",
+          "55,322.12",
+          "033"
+        ],
+        [
+          "",
+          "",
+          "000168814267",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "DONHOLM 1",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Donholm",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Donholm\tKE",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "31-JAN-\n2025",
+          "31-JAN-\n2025",
+          "ATM Withdrawal\nCommission",
+          "",
+          "30.00",
+          "55,292.12",
+          "033"
+        ],
+        [
+          "",
+          "",
+          "012000038956",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "000168814267",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "DONHOLM 1",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Donholm",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Donholm\tKE",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 17,
+      "rows": 21,
+      "columns": 7,
+      "data": [
+        [
+          "31-JAN-\n2025",
+          "31-JAN-\n2025",
+          "Excise Duty\n012000038956",
+          "",
+          "4.50",
+          "55,287.62",
+          "033"
+        ],
+        [
+          "",
+          "",
+          "000168814267",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "DONHOLM 1",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Donholm",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Donholm\tKE",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "31-JAN-\n2025",
+          "31-JAN-\n2025",
+          "Paybill Credit\nTAV18GXLXZ-74833949",
+          "\n6,000.00",
+          "",
+          "61,287.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254748339495 Rose",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Getrude Agola Alias Code",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198398",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "01-FEB-\n2025",
+          "01-FEB-\n2025",
+          "Paybill Credit\nTB18C6V0CM-11533734",
+          "\n2,000.00",
+          "",
+          "63,287.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254115337341",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "JORIM OLUOCH Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB11DOQWSN-79511855",
+          "500.00",
+          "",
+          "63,787.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254795118555",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "NANCY AKINYI Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB17DQWVFF-71190204",
+          "670.00",
+          "",
+          "64,457.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254711902046",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "ANNETTE APONDI Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 18,
+      "rows": 19,
+      "columns": 7,
+      "data": [
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit TB13DQOX43-71021052 From 254710210524\nSARA OYUGI Alias Code",
+          "600.00",
+          "",
+          "65,057.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "2198471",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB13DRWN8P-70234793",
+          "350.00",
+          "",
+          "65,407.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254702347930",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "PATIENCE LUNDI Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB17E2D4EF-71222451",
+          "450.00",
+          "",
+          "65,857.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254712224519",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "PERIS MUTHONI Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB15E330SH-79068954",
+          "670.00",
+          "",
+          "66,527.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254790689540",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "MUZAFARU OMONDI",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Alias Code 2198471",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-",
+          "03-FEB-",
+          "Account to Mobile Money",
+          "",
+          "10,000.0",
+          "56,527.62",
+          "012"
+        ],
+        [
+          "2025",
+          "2025",
+          "Transfer 2021733308-",
+          "",
+          "0",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "725450395",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Mobile Bulk Payment\nCommission 2021733308-",
+          "",
+          "56.00",
+          "56,471.62",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "725450395",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 19,
+      "rows": 17,
+      "columns": 7,
+      "data": [
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Excise Duty 012000038956\\254725450\n395\\2021733305-\n725450395",
+          "",
+          "6.75",
+          "56,464.87",
+          "012"
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB27HR8EQZ-71028650",
+          "900.00",
+          "",
+          "57,364.87",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254710286501",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "IRENE ONYANGO Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB21IRYM2N-72552109",
+          "500.00",
+          "",
+          "57,864.87",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254725521098",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "JUDITH ATIENO Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198398",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB30J622ME-72806362",
+          "\n1,000.00",
+          "",
+          "58,864.87",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254728063628",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Brenda Nekesa Alias",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "Code 2198471",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "03-FEB-\n2025",
+          "03-FEB-\n2025",
+          "Paybill Credit\nTB31JSGZOT-70573663",
+          "\n3,000.00",
+          "",
+          "61,864.87",
+          "012"
+        ],
+        [
+          "",
+          "",
+          "From 254705736634",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "EMILY AOKO Alias Code",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "2198398",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ]
+    }
+  ]
+}

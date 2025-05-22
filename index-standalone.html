@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>Washa Enterprises - Loan Management</title>
+  <style>
+    .error-message {
+      color: #dc3545;
+      padding: 1rem;
+      text-align: center;
+    }
+    .no-results {
+      color: #6c757d;
+      padding: 1rem;
+      text-align: center;
+      font-style: italic;
+    }
+    /* Database connection indicator styles */
+    #db-status-indicator {
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    #db-status-indicator.connected {
+      background-color: #28a745;
+      color: white;
+    }
+    #db-status-indicator.disconnected {
+      background-color: #dc3545;
+      color: white;
+    }
+    #db-status-indicator.fallback {
+      background-color: #ffc107;
+      color: #212529;
+    }
+  </style>
+</head>
+<body>
+  <nav class="main-nav">
+    <div class="logo">
+      <h1>Washa Enterprises</h1>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
+    </ul>
+  </nav>
+
+  <!-- Database connection indicator -->
+  <div id="db-status-indicator" style="position: fixed; right: 20px; top: 60px; padding: 5px 10px; border-radius: 4px; font-size: 12px; display: none;">
+    <i class="fas fa-database"></i> <span id="db-status-text">Checking database...</span>
+  </div>
+
+  <div class="container">
+    <div class="content-wrapper">
+      <section id="loans" class="card">
+        <h2><i class="fas fa-search"></i> Loans</h2>
+        <div class="search-container">
+          <input id="search" placeholder="Search by name...">
+          <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="loan-container">
+          <div id="loanList" class="scrollable-list">
+            <p class="loading">Loading loans...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Global state
+    let globalLoans = [];
+
+    // Helper functions
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-KE', {
+        style: 'currency',
+        currency: 'KES',
+        minimumFractionDigits: 2
+      }).format(amount);
+    }
+
+    function parseDate(dateString) {
+      if (!dateString) return new Date();
+      try {
+        const parts = dateString.split(' ')[0].split('/');
+        if (parts.length === 3) {
+          const day = parseInt(parts[0]);
+          const month = parseInt(parts[1]) - 1;
+          let year = parseInt(parts[2]);
+          if (year < 100) {
+            year = year < 50 ? 2000 + year : 1900 + year;
+          }
+          return new Date(year, month, day);
+        }
+        return new Date(dateString);
+      } catch {
+        return new Date();
+      }
+    }
+
+    function calcDefaulterFee(loan) {
+      const weeksElapsed = Math.floor((Date.now() - parseDate(loan.dateIssued)) / (1000*60*60*24*7));
+      const overdueWeeks = Math.max(0, weeksElapsed - 4);
+      return overdueWeeks * 1000;
+    }
+
+    // CSV parsing and loading
+    async function loadCSVData() {
+      try {
+        const response = await fetch('uploads/Joyce Past Data.csv');
+        if (!response.ok) throw new Error('Failed to load CSV');
+
+        const text = await response.text();
+        const loans = parseCSV(text);
+        globalLoans = loans;
+
+        // Save to localStorage for offline access
+        localStorage.setItem('loans', JSON.stringify(loans));
+
+        displayLoans();
+      } catch (error) {
+        console.error('Error loading CSV:', error);
+        // Try loading from localStorage
+        const storedLoans = JSON.parse(localStorage.getItem('loans') || '[]');
+        if (storedLoans.length > 0) {
+          globalLoans = storedLoans;
+          displayLoans();
+        } else {
+          document.getElementById('loanList').innerHTML =
+            '<p class="error-message">Error loading loans. Please try again.</p>';
+        }
+      }
+    }
+
+    function parseCSV(csvText) {
+      const lines = csvText.split('\\n');
+      const loans = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+
+        const values = lines[i].split(',');
+        if (values.length < 3) continue;
+
+        const principal = parseFloat(values[3]?.replace(/[^0-9.-]+/g, '') || '0');
+        const totalDue = parseFloat(values[6]?.replace(/[^0-9.-]+/g, '') || '0') || principal * 1.2;
+        const amountPaid = parseFloat(values[4]?.replace(/[^0-9.-]+/g, '') || '0');
+
+        const loan = {
+          _id: Date.now() + i,
+          name: values[0],
+          phone: values[1],
+          dateIssued: values[2],
+          principal: principal,
+          totalDue: totalDue,
+          payments: amountPaid > 0 ? [{
+            amount: amountPaid,
+            date: parseDate(values[2]),
+            transactionId: `LEGACY-${Date.now()}-${i}`,
+            depositDetails: values[11] || 'Legacy payment'
+          }] : [],
+          status: values[7] === 'fully paid' ? 'completed' :
+                 values[8] === 'yes' ? 'defaulted' : 'active',
+          occupation: values[9] || '',
+          employerName: values[12] || '',
+          address: values[13] || '',
+          refereeName: values[14] || '',
+          email: values[16] || '',
+          loanPurpose: values[17] || ''
+        };
+
+        loans.push(loan);
+      }
+
+      return loans;
+    }
+
+    // Display functions
+    function displayLoans(searchTerm = '') {
+      const container = document.getElementById('loanList');
+
+      const filteredLoans = searchTerm
+        ? globalLoans.filter(loan => loan.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        : globalLoans;
+
+      if (filteredLoans.length === 0) {
+        container.innerHTML = '<p class="no-results">No loans found</p>';
+        return;
+      }
+
+      container.innerHTML = filteredLoans.map(renderLoan).join('');
+
+      // Add click handlers
+      container.querySelectorAll('.loan').forEach(loanElement => {
+        loanElement.addEventListener('click', function(e) {
+          if (e.target.tagName === 'BUTTON' || e.target.closest('button') ||
+              e.target.tagName === 'INPUT' || e.target.closest('.payment-form')) {
+            return;
+          }
+          const loanId = this.getAttribute('data-id');
+          showLoanDetails(loanId);
+        });
+      });
+    }
+
+    function renderLoan(loan) {
+      const repaid = (loan.payments || []).reduce((sum, p) => sum + p.amount, 0);
+      const remaining = loan.totalDue - repaid;
+      const progressPercent = Math.min(100, Math.round((repaid / loan.totalDue) * 100));
+
+      let statusClass = 'status-active';
+      if (remaining <= 0) statusClass = 'status-completed';
+      else if (calcDefaulterFee(loan) > 0) statusClass = 'status-defaulted';
+
+      return `
+        <div class="loan ${statusClass}" data-id="${loan._id}">
+          <div class="loan-summary">
+            <div class="loan-header">
+              <h3><i class="fas fa-user"></i> ${loan.name}</h3>
+              <span class="loan-date">${parseDate(loan.dateIssued).toLocaleDateString()}</span>
+            </div>
+            <div class="loan-details">
+              <p><i class="fas fa-phone"></i> ${loan.phone}</p>
+              <p><i class="fas fa-money-bill-wave"></i> Total Due: <strong>${formatCurrency(loan.totalDue)}</strong></p>
+              <div class="progress-container">
+                <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                <span class="progress-text">${progressPercent}% Repaid</span>
+              </div>
+              <p class="remaining"><i class="fas fa-hourglass-half"></i> Remaining: <strong>${formatCurrency(remaining)}</strong></p>
+              ${calcDefaulterFee(loan) > 0 ?
+                `<p class="defaulter"><i class="fas fa-exclamation-triangle"></i> Defaulter Fee: <strong>${formatCurrency(calcDefaulterFee(loan))}</strong></p>`
+                : ''}
+            </div>
+            <div class="loan-actions">
+              <button onclick="showPayment('${loan._id}')" class="btn-action">
+                <i class="fas fa-credit-card"></i> Record Payment
+              </button>
+              <button onclick="showLoanDetails('${loan._id}')" class="btn-view">
+                <i class="fas fa-eye"></i> View Details
+              </button>
+            </div>
+          </div>
+          <div id="pay-${loan._id}" class="payment-form" style="display:none;">
+            <div class="form-row">
+              <input id="amt-${loan._id}" type="number" placeholder="Amount" class="payment-input">
+              <input id="tx-${loan._id}" placeholder="Transaction ID or Details" class="payment-input">
+            </div>
+            <button onclick="recordPayment('${loan._id}')" class="btn-submit">
+              <i class="fas fa-paper-plane"></i> Submit Payment
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Loan operations
+    function showPayment(id) {
+      const el = document.getElementById(`pay-${id}`);
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function recordPayment(id) {
+      const amountInput = document.getElementById(`amt-${id}`);
+      const txInput = document.getElementById(`tx-${id}`);
+      const amount = parseFloat(amountInput.value);
+      const transactionId = txInput.value;
+
+      if (!amount || amount <= 0) {
+        alert('Please enter a valid payment amount');
+        return;
+      }
+
+      const loan = globalLoans.find(l => l._id.toString() === id);
+      if (!loan) return;
+
+      loan.payments = loan.payments || [];
+      loan.payments.push({
+        amount,
+        transactionId,
+        date: new Date(),
+        depositDetails: transactionId
+      });
+
+      // Save to localStorage
+      localStorage.setItem('loans', JSON.stringify(globalLoans));
+
+      // Clear form and refresh display
+      amountInput.value = '';
+      txInput.value = '';
+      showPayment(id);
+      displayLoans();
+    }
+
+    function showLoanDetails(id) {
+      const loan = globalLoans.find(l => l._id.toString() === id);
+      if (!loan) return;
+
+      const modal = getOrCreateModal();
+      const repaid = (loan.payments || []).reduce((sum, p) => sum + p.amount, 0);
+      const remaining = loan.totalDue - repaid;
+
+      modal.innerHTML = `
+        <div class="modal-container">
+          <div class="modal-header">
+            <h2>${loan.name}</h2>
+            <span class="close-modal">&times;</span>
+          </div>
+          <div class="modal-content">
+            <div class="detail-grid">
+              <div class="detail-section">
+                <h4>Personal Information</h4>
+                <div class="editable-field">
+                  <label>Name:</label>
+                  <input type="text" name="name" value="${loan.name}" data-original="${loan.name}">
+                </div>
+                <div class="editable-field">
+                  <label>Phone:</label>
+                  <input type="text" name="phone" value="${loan.phone}" data-original="${loan.phone}">
+                </div>
+                <div class="editable-field">
+                  <label>Email:</label>
+                  <input type="email" name="email" value="${loan.email || ''}" data-original="${loan.email || ''}">
+                </div>
+                <div class="editable-field">
+                  <label>Address:</label>
+                  <input type="text" name="address" value="${loan.address || ''}" data-original="${loan.address || ''}">
+                </div>
+                <div class="editable-field">
+                  <label>Occupation:</label>
+                  <input type="text" name="occupation" value="${loan.occupation || ''}" data-original="${loan.occupation || ''}">
+                </div>
+                <div class="editable-field">
+                  <label>Employer:</label>
+                  <input type="text" name="employerName" value="${loan.employerName || ''}" data-original="${loan.employerName || ''}">
+                </div>
+              </div>
+              <div class="detail-section">
+                <h4>Loan Information</h4>
+                <div class="editable-field">
+                  <label>Principal:</label>
+                  <input type="number" name="principal" value="${loan.principal}" data-original="${loan.principal}">
+                </div>
+                <div class="editable-field">
+                  <label>Total Due:</label>
+                  <input type="number" name="totalDue" value="${loan.totalDue}" data-original="${loan.totalDue}">
+                </div>
+                <div class="editable-field">
+                  <label>Status:</label>
+                  <select name="status" data-original="${loan.status}">
+                    <option value="active" ${loan.status === 'active' ? 'selected' : ''}>Active</option>
+                    <option value="completed" ${loan.status === 'completed' ? 'selected' : ''}>Completed</option>
+                    <option value="defaulted" ${loan.status === 'defaulted' ? 'selected' : ''}>Defaulted</option>
+                  </select>
+                </div>
+                <div class="editable-field">
+                  <label>Loan Purpose:</label>
+                  <input type="text" name="loanPurpose" value="${loan.loanPurpose || ''}" data-original="${loan.loanPurpose || ''}">
+                </div>
+              </div>
+              <div class="detail-section payments-section">
+                <h4>Payment History</h4>
+                <div class="payment-list">
+                  ${loan.payments && loan.payments.length ?
+                    loan.payments.map(payment => `
+                      <div class="payment-item">
+                        <div class="payment-date">${new Date(payment.date).toLocaleDateString()}</div>
+                        <div class="payment-amount">${formatCurrency(payment.amount)}</div>
+                        <div class="payment-method">${payment.depositDetails || 'N/A'}</div>
+                      </div>
+                    `).join('') :
+                    '<div class="no-payments">No payments recorded</div>'
+                  }
+                </div>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button onclick="saveLoanChanges('${id}')" class="btn-primary">
+                <i class="fas fa-save"></i> Save Changes
+              </button>
+              <button onclick="closeModal()" class="btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      modal.style.display = 'block';
+      setupModalClose(modal);
+    }
+
+    // Modal utilities
+    function getOrCreateModal() {
+      let modal = document.getElementById('detail-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'detail-modal';
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+      }
+      return modal;
+    }
+
+    function setupModalClose(modal) {
+      const closeBtn = modal.querySelector('.close-modal');
+      if (closeBtn) {
+        closeBtn.onclick = () => closeModal();
+      }
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          closeModal();
+        }
+      };
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('detail-modal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    function saveLoanChanges(id) {
+      const modal = document.getElementById('detail-modal');
+      const fields = modal.querySelectorAll('.editable-field input, .editable-field select');
+      const loan = globalLoans.find(l => l._id.toString() === id);
+      if (!loan) return;
+
+      fields.forEach(field => {
+        const name = field.getAttribute('name');
+        let value = field.value;
+
+        if (name === 'principal' || name === 'totalDue') {
+          value = parseFloat(value);
+        }
+
+        loan[name] = value;
+      });
+
+      localStorage.setItem('loans', JSON.stringify(globalLoans));
+      displayLoans();
+      closeModal();
+    }
+
+    // Check database connection status
+    async function checkDatabaseConnection() {
+      const indicator = document.getElementById('db-status-indicator');
+      const statusText = document.getElementById('db-status-text');
+
+      try {
+        // Show the indicator while checking
+        indicator.style.display = 'block';
+        indicator.className = '';
+        statusText.textContent = 'Checking database...';
+
+        const response = await fetch('http://localhost:3000/api/db-status');
+
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Update the indicator based on the status
+        if (data.status === 'connected') {
+          indicator.className = 'connected';
+          statusText.textContent = 'Database: Connected';
+        } else if (data.fallback) {
+          indicator.className = 'fallback';
+          statusText.textContent = 'Database: Using CSV Fallback';
+        } else {
+          indicator.className = 'disconnected';
+          statusText.textContent = 'Database: Disconnected';
+        }
+      } catch (error) {
+        console.error('Error checking database status:', error);
+        indicator.className = 'disconnected';
+        statusText.textContent = 'Database: Unavailable';
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up search
+      const searchInput = document.getElementById('search');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          displayLoans(e.target.value.trim());
+        });
+      }
+
+      // Check database connection
+      checkDatabaseConnection();
+
+      // Load initial data
+      loadCSVData();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+{
+  "loans": [
+    {
+      "_id": "60d21b4667d0d8992e610c85",
+      "name": "Alice Johnson",
+      "phone": "9876543210",
+      "passportPhoto": "/uploads/placeholder.svg",
+      "idPhotoFront": "/uploads/placeholder.svg",
+      "idPhotoBack": "/uploads/placeholder.svg",
+      "refereeName": "Bob Williams",
+      "principal": 5000,
+      "interest": 1000,
+      "totalDue": 6000,
+      "payments": [
+        {
+          "amount": 1000,
+          "transactionId": "TX789012",
+          "depositDetails": "Mobile money",
+          "date": "2025-05-05T14:30:00.000Z"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2025-04-20T10:00:00.000Z",
+      "address": "123 Pine Street, Westville",
+      "email": "alice.johnson@example.com",
+      "occupation": "Software Developer",
+      "employerName": "Tech Solutions Inc.",
+      "loanPurpose": "Home renovation"
+    },
+    {
+      "_id": "60d21b4667d0d8992e610c86",
+      "name": "David Martinez",
+      "phone": "5551234567",
+      "passportPhoto": "/uploads/placeholder.svg",
+      "idPhotoFront": "/uploads/placeholder.svg",
+      "idPhotoBack": "/uploads/placeholder.svg",
+      "refereeName": "Sarah Lee",
+      "principal": 8000,
+      "interest": 1600,
+      "totalDue": 9600,
+      "payments": [],
+      "status": "active",
+      "createdAt": "2025-04-25T09:15:00.000Z",
+      "address": "456 Oak Avenue, Eastside",
+      "email": "david.martinez@example.com",
+      "occupation": "Chef",
+      "employerName": "Gourmet Restaurant",
+      "loanPurpose": "Business expansion"
+    },
+    {
+      "_id": "60d21b4667d0d8992e610c87",
+      "name": "John Doe",
+      "phone": "1234567890",
+      "passportPhoto": "/uploads/placeholder.svg",
+      "idPhotoFront": "/uploads/placeholder.svg",
+      "idPhotoBack": "/uploads/placeholder.svg",
+      "refereeName": "Jane Smith",
+      "principal": 10000,
+      "interest": 2000,
+      "totalDue": 12000,
+      "payments": [
+        {
+          "amount": 3000,
+          "transactionId": "TX123456",
+          "depositDetails": "Bank transfer",
+          "date": "2025-05-01T10:00:00.000Z"
+        },
+        {
+          "amount": 2000,
+          "transactionId": "TX123457",
+          "depositDetails": "Cash deposit",
+          "date": "2025-05-15T11:20:00.000Z"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2025-04-15T10:00:00.000Z",
+      "address": "789 Maple Road, Northtown",
+      "email": "john.doe@example.com",
+      "occupation": "Marketing Manager",
+      "employerName": "Global Brands Ltd.",
+      "loanPurpose": "Education expenses"
+    },
+    {
+      "_id": "60d21b4667d0d8992e610c88",
+      "name": "Maria Garcia",
+      "phone": "7778889999",
+      "passportPhoto": "/uploads/placeholder.svg",
+      "idPhotoFront": "/uploads/placeholder.svg",
+      "idPhotoBack": "/uploads/placeholder.svg",
+      "refereeName": "Carlos Rodriguez",
+      "principal": 15000,
+      "interest": 3000,
+      "totalDue": 18000,
+      "payments": [
+        {
+          "amount": 4500,
+          "transactionId": "TX456789",
+          "depositDetails": "Bank transfer",
+          "date": "2025-05-10T16:45:00.000Z"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2025-04-10T14:20:00.000Z",
+      "address": "321 Cedar Lane, Southside",
+      "email": "maria.garcia@example.com",
+      "occupation": "Physician",
+      "employerName": "City Hospital",
+      "loanPurpose": "Medical equipment"
+    },
+    {
+      "_id": "60d21b4667d0d8992e610c89",
+      "name": "William Brown",
+      "phone": "3334445555",
+      "passportPhoto": "/uploads/placeholder.svg",
+      "idPhotoFront": "/uploads/placeholder.svg",
+      "idPhotoBack": "/uploads/placeholder.svg",
+      "refereeName": "Elizabeth Taylor",
+      "principal": 7500,
+      "interest": 1500,
+      "totalDue": 9000,
+      "payments": [
+        {
+          "amount": 3000,
+          "transactionId": "TX567890",
+          "depositDetails": "Mobile money",
+          "date": "2025-05-03T09:30:00.000Z"
+        },
+        {
+          "amount": 3000,
+          "transactionId": "TX567891",
+          "depositDetails": "Mobile money",
+          "date": "2025-05-17T10:15:00.000Z"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2025-04-18T11:30:00.000Z",
+      "address": "567 Birch Street, Westend",
+      "email": "william.brown@example.com",
+      "occupation": "Electrician",
+      "employerName": "Power Solutions Co.",
+      "loanPurpose": "Vehicle purchase"
+    }
+  ]
+}

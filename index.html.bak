@@ -1,0 +1,1425 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./public/barclays-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>Washa Enterprises</title>
+  <style>
+    /* Database status indicator */
+    .db-status {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .db-status.connected {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .db-status.disconnected {
+      background-color: #F44336;
+      color: white;
+    }
+
+    .db-status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .db-status.connected .db-status-indicator {
+      background-color: white;
+    }
+
+    .db-status.disconnected .db-status-indicator {
+      background-color: white;
+    }
+
+    /* Error message styles */
+    .error-message-container {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #f44336;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      max-width: 80%;
+      text-align: center;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .error-message-container.show {
+      display: block;
+    }
+
+    .error-message-container ul {
+      margin: 5px 0 0 0;
+      padding-left: 20px;
+      text-align: left;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translate(-50%, 0); }
+      to { opacity: 0; transform: translate(-50%, -20px); }
+    }
+
+    .error-message-container.hide {
+      animation: fadeOut 0.3s ease-in-out forwards;
+    }
+
+    /* Import status styles */
+    .import-status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .import-status .success-message {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 5px;
+      border-left: 4px solid #28a745;
+    }
+
+    .import-status .error-message {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 5px;
+      border-left: 4px solid #dc3545;
+    }
+
+    .form-info {
+      background-color: #e9f5ff;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      border-left: 4px solid #007bff;
+    }
+
+    .form-info p {
+      margin-bottom: 5px;
+    }
+
+    .form-info ul {
+      margin-top: 5px;
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Database status indicator -->
+  <div id="dbStatus" class="db-status">
+    <span class="db-status-indicator"></span>
+    <span id="dbStatusText">Checking database...</span>
+  </div>
+
+  <!-- Error message container -->
+  <div id="errorMessageContainer" class="error-message-container">
+    <strong>Please fill in all required fields:</strong>
+    <ul id="errorMessageList"></ul>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <div class="logo">
+      <img src="logo.svg" alt="LoanTracker Logo">
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="#"><i class="fas fa-search"></i> Search</a></li>
+      <li><a href="#"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+      <li><a href="#"><i class="fas fa-user-plus"></i> Register</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1>Washa Enterprises</h1>
+      <p class="subtitle">Apply & Manage your loans efficiently</p>
+    </header>
+
+    <div class="content-wrapper">
+      <!-- Registration Form -->
+      <section id="register" class="card">
+        <h2><i class="fas fa-user-plus"></i> Register New Applicant</h2>
+        <form id="regForm">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" placeholder="Enter full name" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" placeholder="Enter phone number" required>
+          </div>
+          <div class="form-group">
+            <label for="passportPhoto">Passport Photo</label>
+            <div class="file-upload-container">
+              <input type="file" id="passportPhoto" name="passportPhoto" accept="image/*" capture="user" class="file-input" required>
+              <button type="button" class="file-upload-btn" onclick="document.getElementById('passportPhoto').click()">
+                <i class="fas fa-upload"></i> Choose File
+              </button>
+              <button type="button" class="camera-btn" onclick="openCamera('passportPhoto')">
+                <i class="fas fa-camera"></i> Use Camera
+              </button>
+              <span class="file-name" id="passportPhoto-name">No file chosen</span>
+            </div>
+            <div class="image-preview" id="passportPhoto-preview"></div>
+          </div>
+          <div class="form-group">
+            <label for="idPhotoFront">ID Front Photo</label>
+            <div class="file-upload-container">
+              <input type="file" id="idPhotoFront" name="idPhotoFront" accept="image/*" capture="user" class="file-input" required>
+              <button type="button" class="file-upload-btn" onclick="document.getElementById('idPhotoFront').click()">
+                <i class="fas fa-upload"></i> Choose File
+              </button>
+              <button type="button" class="camera-btn" onclick="openCamera('idPhotoFront')">
+                <i class="fas fa-camera"></i> Use Camera
+              </button>
+              <span class="file-name" id="idPhotoFront-name">No file chosen</span>
+            </div>
+            <div class="image-preview" id="idPhotoFront-preview"></div>
+          </div>
+          <div class="form-group">
+            <label for="idPhotoBack">ID Back Photo</label>
+            <div class="file-upload-container">
+              <input type="file" id="idPhotoBack" name="idPhotoBack" accept="image/*" capture="user" class="file-input" required>
+              <button type="button" class="file-upload-btn" onclick="document.getElementById('idPhotoBack').click()">
+                <i class="fas fa-upload"></i> Choose File
+              </button>
+              <button type="button" class="camera-btn" onclick="openCamera('idPhotoBack')">
+                <i class="fas fa-camera"></i> Use Camera
+              </button>
+              <span class="file-name" id="idPhotoBack-name">No file chosen</span>
+            </div>
+            <div class="image-preview" id="idPhotoBack-preview"></div>
+          </div>
+
+          <!-- Camera Modal -->
+          <div id="camera-modal" class="modal">
+            <div class="modal-content">
+              <span class="close-modal">&times;</span>
+              <h3>Take a Photo</h3>
+              <video id="camera-stream" autoplay></video>
+              <canvas id="camera-canvas" style="display:none;"></canvas>
+              <div class="camera-controls">
+                <button id="capture-btn" type="button"><i class="fas fa-camera"></i> Capture</button>
+                <button id="retake-btn" type="button" style="display:none;"><i class="fas fa-redo"></i> Retake</button>
+                <button id="use-photo-btn" type="button" style="display:none;"><i class="fas fa-check"></i> Use Photo</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="refereeName">Referee Name</label>
+            <input id="refereeName" name="refereeName" placeholder="Enter referee name">
+          </div>
+          <div class="form-group">
+            <label for="principal">Principal Amount</label>
+            <input id="principal" name="principal" type="number" placeholder="Enter loan amount" required>
+          </div>
+          <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Register</button>
+        </form>
+      </section>
+
+      <!-- Search & List -->
+      <section id="loans" class="card">
+        <h2><i class="fas fa-search"></i> Loans</h2>
+        <div class="search-container">
+          <input id="search" placeholder="Search by name...">
+          <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="loan-container">
+          <div id="loanList" class="scrollable-list"></div>
+        </div>
+      </section>
+
+      <!-- Import Payments -->
+      <section id="importPayments" class="card">
+        <h2><i class="fas fa-file-import"></i> Import Payments</h2>
+        <p class="subtitle">Upload a CSV file with payment data to update loan balances</p>
+
+        <form id="paymentsUploadForm" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="paymentsFile">Payments CSV File</label>
+            <div class="file-upload-container">
+              <input type="file" id="paymentsFile" name="paymentsFile" accept=".csv" class="file-input" required>
+              <button type="button" class="file-upload-btn" onclick="document.getElementById('paymentsFile').click()">
+                <i class="fas fa-upload"></i> Choose CSV File
+              </button>
+              <span class="file-name" id="paymentsFile-name">No file chosen</span>
+            </div>
+          </div>
+          <div class="form-info">
+            <p><strong>CSV Format:</strong> The CSV file should have the following columns:</p>
+            <ul>
+              <li>Name - Full name of the borrower</li>
+              <li>Phone - Phone number (optional)</li>
+              <li>Payment Amount - Amount paid</li>
+              <li>Payment Date - Date of payment (DD/MM/YY format)</li>
+              <li>Payment Method - Method of payment (e.g., M-Pesa, Cash)</li>
+            </ul>
+          </div>
+          <button type="submit" class="btn-primary"><i class="fas fa-upload"></i> Upload and Process</button>
+        </form>
+        <div id="importStatus" class="import-status" style="display:none;"></div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Washa Enterprises. All rights reserved.</p>
+  </footer>
+
+
+  <!-- Modal for editing loan details -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeEditModal">&times;</span>
+      <h2>Edit Loan Details</h2>
+      <form id="editLoanForm">
+        <input type="hidden" id="editLoanIndex">
+        <div class="form-group">
+          <label for="editName">Full Name</label>
+          <input type="text" id="editName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="editPhone">Phone Number</label>
+          <input type="text" id="editPhone" name="phone" required>
+        </div>
+        <div class="form-group">
+          <label for="editIdNumber">ID Number</label>
+          <input type="text" id="editIdNumber" name="idNumber">
+        </div>
+        <div class="form-group">
+          <label for="editDateIssued">Date Issued</label>
+          <input type="text" id="editDateIssued" name="dateIssued">
+        </div>
+        <div class="form-group">
+          <label for="editPrincipal">Principal Amount</label>
+          <input type="number" id="editPrincipal" name="principal" required>
+        </div>
+        <div class="form-group">
+          <label for="editTotalDue">Total Due</label>
+          <input type="number" id="editTotalDue" name="totalDue" required>
+        </div>
+        <div class="form-group">
+          <label for="editStatus">Status</label>
+          <select id="editStatus" name="status">
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="defaulted">Defaulted</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal for adding a new loan -->
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeAddModal">&times;</span>
+      <h2>Add New Loan</h2>
+      <form id="addLoanForm">
+        <div class="form-group">
+          <label for="addName">Full Name</label>
+          <input type="text" id="addName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="addPhone">Phone Number</label>
+          <input type="text" id="addPhone" name="phone" required>
+        </div>
+        <div class="form-group">
+          <label for="addIdNumber">ID Number</label>
+          <input type="text" id="addIdNumber" name="idNumber">
+        </div>
+        <div class="form-group">
+          <label for="addDateIssued">Date Issued</label>
+          <input type="text" id="addDateIssued" name="dateIssued" placeholder="DD/MM/YY">
+        </div>
+        <div class="form-group">
+          <label for="addPrincipal">Principal Amount</label>
+          <input type="number" id="addPrincipal" name="principal" required>
+        </div>
+        <div class="form-group">
+          <label for="addTotalDue">Total Due</label>
+          <input type="number" id="addTotalDue" name="totalDue" required>
+        </div>
+        <div class="form-group">
+          <label for="addStatus">Status</label>
+          <select id="addStatus" name="status">
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="defaulted">Defaulted</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">Add Loan</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal for M-Pesa payment -->
+  <div id="mpesaModal" class="modal">
+    <div class="modal-content mpesa-modal">
+      <span class="close-modal" id="closeMpesaModal">&times;</span>
+      <div class="mpesa-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/1200px-M-PESA_LOGO-01.svg.png" alt="M-Pesa Logo" class="mpesa-logo">
+        <h2>M-Pesa Payment</h2>
+      </div>
+      <form id="mpesaPaymentForm">
+        <input type="hidden" id="mpesaLoanIndex">
+        <div class="form-group">
+          <label for="mpesaAmount">Amount to Pay (KES)</label>
+          <input type="number" id="mpesaAmount" name="amount" required min="1">
+        </div>
+        <div class="form-group">
+          <label for="mpesaPhone">Phone Number (e.g., 254XXXXXXXXX)</label>
+          <input type="text" id="mpesaPhone" name="phone" required placeholder="254XXXXXXXXX">
+          <small class="form-hint">Enter your M-Pesa registered phone number starting with 254</small>
+        </div>
+        <div class="payment-actions">
+          <button type="submit" class="btn-mpesa-pay">Pay Now</button>
+          <button type="button" class="btn-mpesa-cancel" id="cancelMpesaBtn">Cancel</button>
+        </div>
+      </form>
+      <div id="mpesaStatus" class="mpesa-status"></div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    // Global variables
+    let allLoans = [];
+    let filteredLoans = [];
+
+    // Format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-KE', {
+        style: 'currency',
+        currency: 'KES',
+        minimumFractionDigits: 2
+      }).format(amount);
+    }
+
+    // Parse date
+    function parseDate(dateString) {
+      if (!dateString) return new Date();
+      try {
+        const parts = dateString.split(' ')[0].split('/');
+        if (parts.length === 3) {
+          const day = parseInt(parts[0]);
+          const month = parseInt(parts[1]) - 1;
+          let year = parseInt(parts[2]);
+          if (year < 100) {
+            year = year < 50 ? 2000 + year : 1900 + year;
+          }
+          return new Date(year, month, day);
+        }
+        return new Date(dateString);
+      } catch {
+        return new Date();
+      }
+    }
+
+    // Format date for display
+    function formatDate(date) {
+      if (!date) return '';
+      const d = new Date(date);
+      return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear().toString().substring(2)}`;
+    }
+
+    // Generate a unique ID
+    function generateId() {
+      return Date.now().toString() + Math.random().toString(36).substring(2, 9);
+    }
+
+    // Render loan with numbering
+    function renderLoan(loan, index) {
+      const statusClass = loan.status === 'completed' ? 'status-completed' :
+                         loan.status === 'defaulted' ? 'status-defaulted' : 'status-active';
+
+      // Calculate remaining amount
+      const amountPaid = loan.amountPaid ||
+                        (loan.payments && loan.payments.length > 0
+                          ? loan.payments.reduce((sum, p) => sum + p.amount, 0)
+                          : 0);
+      const remaining = loan.totalDue - amountPaid;
+
+      return `
+        <div class="loan ${statusClass}" data-index="${index}">
+          <div class="loan-header">
+            <h3><i class="fas fa-hashtag"></i> ${index + 1}. <i class="fas fa-user"></i> ${loan.name}</h3>
+            <span class="loan-date">${loan.dateIssued}</span>
+          </div>
+          <div class="loan-details">
+            <p><i class="fas fa-phone"></i> ${loan.phone}</p>
+            ${loan.idNumber ? `<p><i class="fas fa-id-card"></i> ID: ${loan.idNumber}</p>` : ''}
+            <p><i class="fas fa-money-bill-wave"></i> Principal: <strong>${formatCurrency(loan.principal)}</strong></p>
+            <p><i class="fas fa-money-bill-wave"></i> Total Due: <strong>${formatCurrency(loan.totalDue)}</strong></p>
+            ${amountPaid > 0 ? `<p><i class="fas fa-check-circle"></i> Amount Paid: <strong>${formatCurrency(amountPaid)}</strong></p>` : ''}
+            <p><i class="fas fa-hourglass-half"></i> Remaining: <strong>${formatCurrency(remaining)}</strong></p>
+            <p><i class="fas fa-info-circle"></i> Status: <span class="loan-status ${loan.status}">${loan.status.charAt(0).toUpperCase() + loan.status.slice(1)}</span></p>
+          </div>
+          <div class="loan-actions">
+            <button class="btn-edit" data-index="${index}"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn-mpesa" data-index="${index}">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/1200px-M-PESA_LOGO-01.svg.png" alt="M-Pesa" class="mpesa-icon">
+              Pay with M-Pesa
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Parse CSV to loans
+    function parseCSVToLoans(csvText) {
+      console.log('Starting CSV parsing...');
+
+      // Split the CSV text into lines
+      const lines = csvText.split(/\r?\n/);
+      console.log('CSV has ' + lines.length + ' lines');
+
+      const loans = [];
+      const headers = lines[0].split(',');
+
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) {
+          continue;
+        }
+
+        const values = lines[i].split(',');
+
+        if (values.length < 3) {
+          continue;
+        }
+
+        // Parse numeric values, handling currency formatting
+        // Multiply by 1000 directly when parsing to ensure correct values
+        const principal = parseFloat((values[3] || '0').replace(/[^0-9.-]+/g, '') || '0') * 1000;
+        const totalDue = (parseFloat((values[6] || '0').replace(/[^0-9.-]+/g, '') || '0') || principal / 1000 * 1.2) * 1000;
+
+        // Determine status
+        let status = 'active';
+        if (values[7] === 'fully paid') {
+          status = 'completed';
+        } else if (values[8] === 'yes') {
+          status = 'defaulted';
+        }
+
+        // Create the loan object
+        const loan = {
+          id: generateId(),
+          name: values[0] || '',
+          phone: values[1] || '',
+          dateIssued: values[2] || '',
+          principal: principal,
+          totalDue: totalDue,
+          status: status,
+          idNumber: values[15] || '', // Using principalAmount field as ID number for now
+          principalAdjusted: true // Mark as already adjusted since we multiplied by 1000 during parsing
+        };
+
+        loans.push(loan);
+      }
+
+      console.log('Successfully parsed ' + loans.length + ' loans');
+      return loans;
+    }
+
+    // Display loans
+    function displayLoans(loans) {
+      const container = document.getElementById('loanList');
+      if (!container) {
+        console.error('Loan list container not found');
+        return;
+      }
+
+      if (loans.length > 0) {
+        let loansHtml = `<div class="loan-count">Total Accounts: ${loans.length}</div>`;
+
+        for (let i = 0; i < loans.length; i++) {
+          loansHtml += renderLoan(loans[i], i);
+        }
+        container.innerHTML = loansHtml;
+
+        // Add event listeners to edit buttons
+        const editButtons = document.querySelectorAll('.btn-edit');
+        editButtons.forEach(button => {
+          button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const index = this.getAttribute('data-index');
+            openEditModal(index);
+          });
+        });
+
+        // Add event listeners to M-Pesa buttons
+        const mpesaButtons = document.querySelectorAll('.btn-mpesa');
+        mpesaButtons.forEach(button => {
+          button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const index = this.getAttribute('data-index');
+            openMpesaModal(index);
+          });
+        });
+
+        // Add event listener to add loan button
+        const addLoanBtn = document.getElementById('addLoanBtn');
+        if (addLoanBtn) {
+          addLoanBtn.addEventListener('click', openAddModal);
+        }
+
+        // Add event listeners to loan items for clicking
+        const loanItems = document.querySelectorAll('.loan');
+        loanItems.forEach(item => {
+          item.addEventListener('click', function(e) {
+            // Don't open edit modal if clicking on a button
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+              return;
+            }
+            const index = this.getAttribute('data-index');
+            openEditModal(index);
+          });
+        });
+
+        console.log('Displayed ' + loans.length + ' loans');
+      } else {
+        container.innerHTML = '<p class="no-results">No loans found</p>';
+
+        // We're not using the Add New Loan button anymore - using Register button instead
+
+        console.log('No loans to display');
+      }
+    }
+
+    // Filter and sort loans alphabetically
+    function filterLoans(searchTerm) {
+      // First sort all loans alphabetically
+      allLoans.sort((a, b) => a.name.localeCompare(b.name));
+
+      if (!searchTerm) {
+        filteredLoans = [...allLoans];
+        displayLoans(filteredLoans);
+        return;
+      }
+
+      searchTerm = searchTerm.toLowerCase();
+      filteredLoans = allLoans.filter(loan =>
+        loan.name.toLowerCase().includes(searchTerm) ||
+        loan.phone.toLowerCase().includes(searchTerm) ||
+        (loan.idNumber && loan.idNumber.toLowerCase().includes(searchTerm))
+      );
+
+      displayLoans(filteredLoans);
+    }
+
+    // Also sort initial data load
+    async function loadCSVData() {
+      try {
+        // ... existing load code ...
+
+        // Sort after loading
+        allLoans.sort((a, b) => a.name.localeCompare(b.name));
+        filteredLoans = [...allLoans];
+        displayLoans(filteredLoans);
+      } catch (error) {
+        // ... error handling ...
+      }
+    }
+
+    // Open edit modal
+    function openEditModal(index) {
+      const loan = filteredLoans[index];
+      if (!loan) return;
+
+      document.getElementById('editLoanIndex').value = index;
+      document.getElementById('editName').value = loan.name;
+      document.getElementById('editPhone').value = loan.phone;
+      document.getElementById('editIdNumber').value = loan.idNumber || '';
+      document.getElementById('editDateIssued').value = loan.dateIssued;
+      document.getElementById('editPrincipal').value = loan.principal;
+      document.getElementById('editTotalDue').value = loan.totalDue;
+      document.getElementById('editStatus').value = loan.status;
+
+      const modal = document.getElementById('editModal');
+      modal.style.display = 'block';
+    }
+
+    // Open add modal
+    function openAddModal() {
+      // Clear form
+      document.getElementById('addLoanForm').reset();
+      document.getElementById('addDateIssued').value = formatDate(new Date());
+
+      const modal = document.getElementById('addModal');
+      modal.style.display = 'block';
+    }
+
+    // Close modals
+    function closeModals() {
+      const editModal = document.getElementById('editModal');
+      const addModal = document.getElementById('addModal');
+      editModal.style.display = 'none';
+      addModal.style.display = 'none';
+    }
+
+    // Save edited loan
+    async function saveEditedLoan(e) {
+      e.preventDefault();
+
+      // Show loading state
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton.innerHTML;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      submitButton.disabled = true;
+
+      try {
+        const index = document.getElementById('editLoanIndex').value;
+        const loan = filteredLoans[index];
+        if (!loan) return;
+
+        // Get updated data
+        const updatedData = {
+          name: document.getElementById('editName').value,
+          phone: document.getElementById('editPhone').value,
+          idNumber: document.getElementById('editIdNumber').value,
+          dateIssued: document.getElementById('editDateIssued').value,
+          principal: parseFloat(document.getElementById('editPrincipal').value),
+          totalDue: parseFloat(document.getElementById('editTotalDue').value),
+          status: document.getElementById('editStatus').value,
+          interest: parseFloat(document.getElementById('editPrincipal').value) * 0.2
+        };
+
+        // Check if we're connected to MongoDB
+        const isConnected = await checkDatabaseStatus();
+
+        let updatedLoan;
+
+        if (isConnected) {
+          // Use API to update loan
+          updatedLoan = await updateLoan(loan._id, updatedData);
+          console.log('Loan updated via API:', updatedLoan);
+        } else {
+          // Fallback to local update
+          updatedLoan = { ...loan, ...updatedData };
+          console.log('Loan updated locally:', updatedLoan);
+        }
+
+        // Update the loan in filteredLoans array
+        filteredLoans[index] = updatedLoan;
+
+        // Update the loan in allLoans array
+        const originalIndex = allLoans.findIndex(l => l._id === loan._id);
+        if (originalIndex !== -1) {
+          allLoans[originalIndex] = { ...updatedLoan };
+        }
+
+        // Save to localStorage
+        saveLoansToStorage();
+
+        // Refresh display
+        displayLoans(filteredLoans);
+
+        // Close modal
+        closeModals();
+      } catch (error) {
+        console.error('Error updating loan:', error);
+        alert('Failed to update loan: ' + error.message);
+      } finally {
+        // Restore button state
+        submitButton.innerHTML = originalButtonText;
+        submitButton.disabled = false;
+      }
+    }
+
+    // Add new loan
+    async function addNewLoan(e) {
+      e.preventDefault();
+
+      // Show loading state
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton.innerHTML;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+      submitButton.disabled = true;
+
+      try {
+        // Get form data
+        const loanData = {
+          name: document.getElementById('addName').value,
+          phone: document.getElementById('addPhone').value,
+          idNumber: document.getElementById('addIdNumber').value,
+          dateIssued: document.getElementById('addDateIssued').value,
+          principal: parseFloat(document.getElementById('addPrincipal').value),
+          totalDue: parseFloat(document.getElementById('addTotalDue').value),
+          status: document.getElementById('addStatus').value,
+          interest: parseFloat(document.getElementById('addPrincipal').value) * 0.2
+        };
+
+        // Check if we're connected to MongoDB
+        const isConnected = await checkDatabaseStatus();
+
+        let newLoan;
+
+        if (isConnected) {
+          // Use API to create loan
+          newLoan = await createLoan(loanData);
+          console.log('Loan created via API:', newLoan);
+        } else {
+          // Fallback to local creation
+          newLoan = {
+            _id: generateId(),
+            ...loanData,
+            principalAdjusted: true,
+            createdAt: new Date().toISOString(),
+            payments: []
+          };
+          console.log('Loan created locally:', newLoan);
+        }
+
+        // Add to allLoans array
+        allLoans.unshift(newLoan);
+
+        // Update filtered loans
+        filterLoans(document.getElementById('search').value);
+
+        // Save to localStorage
+        saveLoansToStorage();
+
+        // Clear the registration form
+        const registerForm = document.getElementById('regForm');
+        if (registerForm) {
+          registerForm.reset();
+        }
+
+        // Clear any image previews
+        const previewElements = document.querySelectorAll('.image-preview');
+        previewElements.forEach(preview => {
+          preview.innerHTML = '';
+        });
+
+        // Reset file name displays
+        const fileNameElements = document.querySelectorAll('.file-name');
+        fileNameElements.forEach(element => {
+          element.textContent = 'No file chosen';
+        });
+
+        // Close modal
+        closeModals();
+      } catch (error) {
+        console.error('Error adding loan:', error);
+        alert('Failed to add loan: ' + error.message);
+      } finally {
+        // Restore button state
+        submitButton.innerHTML = originalButtonText;
+        submitButton.disabled = false;
+      }
+    }
+
+    // Save loans to localStorage
+    function saveLoansToStorage() {
+      try {
+        localStorage.setItem('loans', JSON.stringify(allLoans));
+        console.log('Loans saved to localStorage');
+      } catch (e) {
+        console.error('Error saving loans to localStorage:', e);
+      }
+    }
+
+    // Load loans from localStorage
+    function loadLoansFromStorage() {
+      try {
+        const storedLoans = localStorage.getItem('loans');
+        return storedLoans ? JSON.parse(storedLoans) : null;
+      } catch (e) {
+        console.error('Error loading loans from localStorage:', e);
+        return null;
+      }
+    }
+
+    // Load loan data from API or fallback to localStorage
+    async function loadCSVData() {
+      try {
+        console.log('Starting loan data loading...');
+
+        // Check database connection status
+        const isConnected = await checkDatabaseStatus();
+        updateDatabaseStatus(isConnected);
+
+        if (isConnected) {
+          console.log('Connected to MongoDB, fetching loans from API...');
+
+          // Fetch loans from API
+          const loans = await fetchLoans();
+          console.log('Fetched ' + loans.length + ' loans from MongoDB');
+
+          // Ensure all loans have the principalAdjusted flag set
+          loans.forEach(loan => {
+            loan.principalAdjusted = true;
+          });
+
+          allLoans = loans;
+          filteredLoans = [...allLoans];
+
+          // Save to localStorage as backup
+          saveLoansToStorage();
+
+          // Display the loans
+          displayLoans(filteredLoans);
+          return;
+        } else {
+          console.log('Not connected to MongoDB, using fallback data...');
+
+          // First try to load from localStorage
+          const storedLoans = loadLoansFromStorage();
+          if (storedLoans && storedLoans.length > 0) {
+            console.log('Loaded ' + storedLoans.length + ' loans from localStorage');
+
+            // Adjust principal amounts if needed
+            storedLoans.forEach(loan => {
+              if (!loan.principalAdjusted) {
+                loan.principal = loan.principal * 1000;
+
+                if (Math.abs(loan.totalDue - (loan.principal / 1000 * 1.2)) < 0.01) {
+                  loan.totalDue = loan.principal * 1.2;
+                } else {
+                  loan.totalDue = loan.totalDue * 1000;
+                }
+
+                if (loan.amountPaid) {
+                  loan.amountPaid = loan.amountPaid * 1000;
+                }
+
+                loan.principalAdjusted = true;
+              }
+            });
+
+            allLoans = storedLoans;
+            filteredLoans = [...allLoans];
+
+            // Save the adjusted loans back to localStorage
+            saveLoansToStorage();
+
+            displayLoans(filteredLoans);
+            return;
+          }
+
+          // If no localStorage data, try to load from CSV endpoint
+          try {
+            const response = await fetch('/api/csv-data');
+            if (!response.ok) {
+              throw new Error('Failed to load CSV data');
+            }
+
+            const text = await response.text();
+            console.log('CSV text loaded, parsing...');
+
+            allLoans = parseCSVToLoans(text);
+
+            // Mark all loans as adjusted
+            allLoans.forEach(loan => {
+              loan.principalAdjusted = true;
+            });
+
+            filteredLoans = [...allLoans];
+
+            // Save to localStorage for future use
+            saveLoansToStorage();
+
+            displayLoans(filteredLoans);
+          } catch (csvError) {
+            console.error('Error loading CSV:', csvError);
+            document.getElementById('loanList').innerHTML = '<p class="error-message">Failed to load loan data. Please check your connection and try again.</p>';
+          }
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        document.getElementById('loanList').innerHTML = '<p class="error-message">Failed to load loan data. Please check your connection and try again.</p>';
+      }
+    }
+
+    // Update database status indicator
+    function updateDatabaseStatus(isConnected) {
+      const statusElement = document.getElementById('dbStatus');
+      const statusTextElement = document.getElementById('dbStatusText');
+
+      if (isConnected) {
+        statusElement.className = 'db-status connected';
+        statusTextElement.textContent = 'Connected to MongoDB';
+      } else {
+        statusElement.className = 'db-status disconnected';
+        statusTextElement.textContent = 'Using CSV Fallback';
+      }
+    }
+
+    // Open M-Pesa payment modal
+    function openMpesaModal(index) {
+      const loan = filteredLoans[index];
+      if (!loan) return;
+
+      document.getElementById('mpesaLoanIndex').value = index;
+
+      // Calculate remaining amount
+      const amountPaid = loan.amountPaid || 0;
+      const remaining = loan.totalDue - amountPaid;
+
+      // Set default amount to remaining balance
+      document.getElementById('mpesaAmount').value = remaining.toFixed(2);
+
+      // Set default phone number to the loan's phone number
+      let phoneNumber = loan.phone || '';
+      // Format phone number to start with 254 if it doesn't already
+      if (phoneNumber && !phoneNumber.startsWith('254')) {
+        // Remove any leading zeros
+        phoneNumber = phoneNumber.replace(/^0+/, '');
+        // If it starts with +254, remove the +
+        phoneNumber = phoneNumber.replace(/^\+254/, '254');
+        // If it doesn't start with 254, add it
+        if (!phoneNumber.startsWith('254')) {
+          phoneNumber = '254' + phoneNumber;
+        }
+      }
+      document.getElementById('mpesaPhone').value = phoneNumber;
+
+      // Show the modal
+      const modal = document.getElementById('mpesaModal');
+      modal.style.display = 'block';
+    }
+
+    // Process M-Pesa payment
+    async function processMpesaPayment(e) {
+      e.preventDefault();
+
+      const index = document.getElementById('mpesaLoanIndex').value;
+      const loan = filteredLoans[index];
+      if (!loan) return;
+
+      const amount = parseFloat(document.getElementById('mpesaAmount').value);
+      const phoneNumber = document.getElementById('mpesaPhone').value.trim();
+
+      // Validate amount
+      if (isNaN(amount) || amount <= 0) {
+        showMpesaStatus('Please enter a valid amount', 'error');
+        return;
+      }
+
+      // Validate phone number
+      if (!phoneNumber.match(/^254\d{9}$/)) {
+        showMpesaStatus('Please enter a valid phone number starting with 254 followed by 9 digits', 'error');
+        return;
+      }
+
+      // Show processing status
+      showMpesaStatus('Processing payment...', 'processing');
+
+      try {
+        // Call the Daraja API
+        const response = await initiateSTKPush(phoneNumber, amount, loan.id);
+
+        if (response.success) {
+          // Show success message
+          showMpesaStatus('Payment initiated successfully. Please check your phone to complete the transaction.', 'success');
+
+          // Check transaction status after a delay
+          setTimeout(() => checkTransactionStatus(response.checkoutRequestID, index, amount), 10000);
+        } else {
+          // Show error message
+          showMpesaStatus('Failed to initiate payment: ' + response.message, 'error');
+        }
+      } catch (error) {
+        console.error('Error processing M-Pesa payment:', error);
+
+        // For demo purposes, simulate a successful payment
+        simulateSuccessfulPayment(index, amount);
+      }
+    }
+
+    // Show M-Pesa status message
+    function showMpesaStatus(message, type) {
+      const statusElement = document.getElementById('mpesaStatus');
+      statusElement.textContent = message;
+      statusElement.className = 'mpesa-status ' + type;
+    }
+
+    // Initiate STK Push (Daraja API)
+    async function initiateSTKPush(phoneNumber, amount, reference) {
+      // This is where you would make the actual API call to the Daraja API
+      // For now, we'll simulate a response
+
+      // NOTE: In a real implementation, this would be a server-side call
+      // to protect your API credentials
+
+      /*
+      // Example of how the actual API call would look:
+      const response = await fetch('/api/mpesa/stkpush', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          phoneNumber,
+          amount,
+          reference
+        })
+      });
+
+      return await response.json();
+      */
+
+      // Simulate API response
+      return {
+        success: true,
+        message: 'STK push initiated',
+        checkoutRequestID: 'ws_CO_' + Date.now() + Math.random().toString(36).substring(2, 9)
+      };
+    }
+
+    // Check transaction status
+    async function checkTransactionStatus(checkoutRequestID, index, amount) {
+      // This is where you would make the actual API call to check the transaction status
+      // For now, we'll simulate a successful transaction
+
+      /*
+      // Example of how the actual API call would look:
+      const response = await fetch('/api/mpesa/status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          checkoutRequestID
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success && result.status === 'COMPLETED') {
+        // Update loan with payment
+        updateLoanWithPayment(index, amount);
+
+        // Show success message
+        showMpesaStatus('Payment completed successfully!', 'success');
+
+        // Close modal after a delay
+        setTimeout(closeModals, 3000);
+      } else {
+        // Show error message
+        showMpesaStatus('Payment not completed. Please try again.', 'error');
+      }
+      */
+
+      // Simulate successful transaction
+      simulateSuccessfulPayment(index, amount);
+    }
+
+    // Simulate successful payment (for demo purposes)
+    function simulateSuccessfulPayment(index, amount) {
+      // Update loan with payment
+      updateLoanWithPayment(index, amount);
+
+      // Show success message
+      showMpesaStatus('Payment completed successfully!', 'success');
+
+      // Close modal after a delay
+      setTimeout(closeModals, 3000);
+    }
+
+    // Update loan with payment
+    async function updateLoanWithPayment(index, amount) {
+      const loan = filteredLoans[index];
+      if (!loan) return;
+
+      try {
+        // Check if we're connected to MongoDB
+        const isConnected = await checkDatabaseStatus();
+
+        let updatedLoan;
+
+        if (isConnected) {
+          // Use API to add payment
+          const paymentData = {
+            amount: amount,
+            transactionId: 'MPESA-' + Date.now(),
+            depositDetails: 'M-Pesa payment'
+          };
+
+          updatedLoan = await addPayment(loan._id, paymentData);
+          console.log('Payment added via API:', updatedLoan);
+        } else {
+          // Fallback to local update
+          // Update amount paid
+          loan.amountPaid = (loan.amountPaid || 0) + amount;
+
+          // Add to payments array if it exists
+          if (!loan.payments) {
+            loan.payments = [];
+          }
+
+          loan.payments.push({
+            amount: amount,
+            date: new Date().toISOString(),
+            transactionId: 'MPESA-' + Date.now(),
+            depositDetails: 'M-Pesa payment'
+          });
+
+          // Update status if fully paid
+          if (loan.amountPaid >= loan.totalDue) {
+            loan.status = 'completed';
+          }
+
+          updatedLoan = { ...loan };
+          console.log('Payment added locally:', updatedLoan);
+        }
+
+        // Update the loan in filteredLoans array
+        filteredLoans[index] = updatedLoan;
+
+        // Update the loan in allLoans array
+        const originalIndex = allLoans.findIndex(l => l._id === loan._id);
+        if (originalIndex !== -1) {
+          allLoans[originalIndex] = { ...updatedLoan };
+        }
+
+        // Save to localStorage
+        saveLoansToStorage();
+
+        // Refresh display
+        displayLoans(filteredLoans);
+      } catch (error) {
+        console.error('Error updating loan with payment:', error);
+        alert('Failed to process payment: ' + error.message);
+      }
+    }
+
+    // Close all modals
+    function closeModals() {
+      const editModal = document.getElementById('editModal');
+      const addModal = document.getElementById('addModal');
+      const mpesaModal = document.getElementById('mpesaModal');
+
+      editModal.style.display = 'none';
+      addModal.style.display = 'none';
+      mpesaModal.style.display = 'none';
+
+      // Clear M-Pesa status
+      document.getElementById('mpesaStatus').textContent = '';
+      document.getElementById('mpesaStatus').className = 'mpesa-status';
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM fully loaded, initializing...');
+
+      // Clear localStorage to force fresh data load with the new adjustments
+      localStorage.removeItem('loans');
+      console.log('Cleared localStorage to ensure fresh data load');
+
+      // Load data
+      loadCSVData();
+
+      // Set up search functionality
+      const searchInput = document.getElementById('search');
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          filterLoans(this.value);
+        });
+      }
+
+      // Function to show error message for empty required fields
+      function showErrorMessage(emptyFields) {
+        const errorContainer = document.getElementById('errorMessageContainer');
+        const errorList = document.getElementById('errorMessageList');
+
+        // Clear previous error messages
+        errorList.innerHTML = '';
+
+        // Add each empty field to the error list
+        emptyFields.forEach(field => {
+          const li = document.createElement('li');
+          li.textContent = field;
+          errorList.appendChild(li);
+        });
+
+        // Show the error container
+        errorContainer.classList.remove('hide');
+        errorContainer.classList.add('show');
+
+        // Set timeout to hide the error message after 5 seconds
+        setTimeout(() => {
+          errorContainer.classList.remove('show');
+          errorContainer.classList.add('hide');
+
+          // Remove the hide class after animation completes
+          setTimeout(() => {
+            errorContainer.classList.remove('hide');
+          }, 300); // Match the animation duration
+        }, 5000);
+      }
+
+      // Set up Register button to open Add Loan modal
+      const registerForm = document.getElementById('regForm');
+      if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+          e.preventDefault(); // Prevent the default form submission
+
+          // Check for empty required fields
+          const emptyFields = [];
+
+          // Get all required inputs in the form
+          const requiredInputs = registerForm.querySelectorAll('[required]');
+
+          // Check each required input
+          requiredInputs.forEach(input => {
+            if (!input.value.trim()) {
+              // Get the label text for this input
+              const labelElement = document.querySelector(`label[for="${input.id}"]`);
+              const fieldName = labelElement ? labelElement.textContent : input.id;
+              emptyFields.push(fieldName);
+            }
+
+            // Special check for file inputs
+            if (input.type === 'file' && !input.files.length) {
+              const labelElement = document.querySelector(`label[for="${input.id}"]`);
+              const fieldName = labelElement ? labelElement.textContent : input.id;
+              emptyFields.push(fieldName);
+            }
+          });
+
+          // If there are empty fields, show error message and return
+          if (emptyFields.length > 0) {
+            showErrorMessage(emptyFields);
+            return;
+          }
+
+          // If all required fields are filled, proceed with form submission
+          // Get form values
+          const name = document.getElementById('name').value;
+          const phone = document.getElementById('phone').value;
+          const principal = parseFloat(document.getElementById('principal').value);
+
+          // Pre-fill the Add Loan form
+          document.getElementById('addName').value = name;
+          document.getElementById('addPhone').value = phone;
+          document.getElementById('addPrincipal').value = principal;
+          document.getElementById('addTotalDue').value = (principal * 1.2).toFixed(2);
+          document.getElementById('addDateIssued').value = formatDate(new Date());
+          document.getElementById('addStatus').value = 'active';
+
+          // Open the Add Loan modal
+          openAddModal();
+        });
+      }
+
+      // Set up modal close buttons
+      document.getElementById('closeEditModal').addEventListener('click', closeModals);
+      document.getElementById('closeAddModal').addEventListener('click', closeModals);
+      document.getElementById('closeMpesaModal').addEventListener('click', closeModals);
+      document.getElementById('cancelMpesaBtn').addEventListener('click', closeModals);
+
+      // Close modal when clicking outside
+      window.addEventListener('click', function(e) {
+        const editModal = document.getElementById('editModal');
+        const addModal = document.getElementById('addModal');
+        const mpesaModal = document.getElementById('mpesaModal');
+
+        if (e.target === editModal || e.target === addModal || e.target === mpesaModal) {
+          closeModals();
+        }
+      });
+
+      // Set up form submissions
+      document.getElementById('editLoanForm').addEventListener('submit', saveEditedLoan);
+      document.getElementById('addLoanForm').addEventListener('submit', addNewLoan);
+      document.getElementById('mpesaPaymentForm').addEventListener('submit', processMpesaPayment);
+      document.getElementById('paymentsUploadForm').addEventListener('submit', uploadPaymentsCSV);
+
+      // Function to upload payments CSV
+      async function uploadPaymentsCSV(e) {
+        e.preventDefault();
+
+        const fileInput = document.getElementById('paymentsFile');
+        if (!fileInput.files[0]) {
+          alert('Please select a CSV file to upload');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('paymentsFile', fileInput.files[0]);
+
+        const statusDiv = document.getElementById('importStatus');
+        statusDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Uploading and processing payments...</p>';
+        statusDiv.style.display = 'block';
+
+        try {
+          const response = await fetch('/api/loans/upload-payments', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            statusDiv.innerHTML = `
+              <div class="success-message">
+                <p><i class="fas fa-check-circle"></i> Payments processed successfully!</p>
+                <ul>
+                  <li>Successfully processed: ${result.results.success}</li>
+                  <li>Errors: ${result.results.errors}</li>
+                  <li>Loans not found: ${result.results.notFound}</li>
+                </ul>
+              </div>
+            `;
+
+            // Reload loans to show updated data
+            loadLoans();
+          } else {
+            statusDiv.innerHTML = `
+              <div class="error-message">
+                <p><i class="fas fa-exclamation-triangle"></i> Error processing payments: ${result.error}</p>
+              </div>
+            `;
+          }
+        } catch (error) {
+          statusDiv.innerHTML = `
+            <div class="error-message">
+              <p><i class="fas fa-exclamation-triangle"></i> Error: ${error.message}</p>
+            </div>
+          `;
+        }
+      }
+
+      // Auto-calculate total due when principal changes in add form
+      document.getElementById('addPrincipal').addEventListener('input', function() {
+        const principal = parseFloat(this.value) || 0;
+        document.getElementById('addTotalDue').value = (principal * 1.2).toFixed(2);
+      });
+
+      // Auto-calculate total due when principal changes in edit form
+      document.getElementById('editPrincipal').addEventListener('input', function() {
+        const principal = parseFloat(this.value) || 0;
+        document.getElementById('editTotalDue').value = (principal * 1.2).toFixed(2);
+      });
+    });
+  </script>
+</body>
+</html>

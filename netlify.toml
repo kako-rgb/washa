@@ -1,0 +1,38 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  command = "echo 'Static site deployment - no build needed'"
+
+# Redirect API requests to serverless functions
+[[redirects]]
+  from = "/api/db-status"
+  to = "/.netlify/functions/db-status"
+  status = 200
+
+[[redirects]]
+  from = "/api/loans"
+  to = "/.netlify/functions/loans"
+  status = 200
+
+[[redirects]]
+  from = "/api/loans/*"
+  to = "/.netlify/functions/loans/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/create-loan"
+  to = "/.netlify/functions/create-loan"
+  status = 200
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept"

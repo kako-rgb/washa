@@ -1,0 +1,39 @@
+/* Previous CSS content remains unchanged until the status badges section */
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9em;
+  margin-left: 5px;
+}
+
+.status-badge.completed {
+  background-color: #4CAF50; /* Green */
+}
+
+.status-badge.active {
+  background-color: #FFC107; /* Yellow */
+  color: #333;
+}
+
+.status-badge.defaulted {
+  background-color: #F44336; /* Red */
+}
+
+/* Loan Status Indicators */
+.loan.completed {
+  border-left: 4px solid #4CAF50;
+}
+
+.loan.active {
+  border-left: 4px solid #FFC107;
+}
+
+.loan.defaulted {
+  border-left: 4px solid #F44336;
+}
+
+/* Rest of the CSS file remains unchanged */

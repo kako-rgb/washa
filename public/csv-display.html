@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="barclays-style.css">
+  <title>CSV Data Display</title>
+  <style>
+    .loan-container {
+      width: 100%;
+      max-width: 100%;
+      height: 600px;
+      margin: 0 auto;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      background-color: white;
+      padding: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .scrollable-list {
+      height: 100%;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+    
+    .loan {
+      background-color: white;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #00aeef;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .loan:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .loan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .loan-date {
+      font-size: 0.85rem;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .loan h3 {
+      color: #00395d;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .loan-details p {
+      margin-bottom: 0.5rem;
+      color: #666;
+    }
+    
+    .loan-details strong {
+      color: #00395d;
+      font-weight: 600;
+    }
+    
+    .data-source-indicator {
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+      text-align: center;
+      font-weight: 500;
+      color: white;
+      background-color: #FF6C37;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Washa Enterprises</h1>
+      <p class="subtitle">CSV Data Display</p>
+    </header>
+
+    <div class="loan-container">
+      <div class="data-source-indicator">Data from CSV file</div>
+      <div id="loanList" class="scrollable-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // Format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-KE', {
+        style: 'currency',
+        currency: 'KES',
+        minimumFractionDigits: 2
+      }).format(amount);
+    }
+
+    // Parse date
+    function parseDate(dateString) {
+      if (!dateString) return new Date();
+      try {
+        const parts = dateString.split(' ')[0].split('/');
+        if (parts.length === 3) {
+          const day = parseInt(parts[0]);
+          const month = parseInt(parts[1]) - 1;
+          let year = parseInt(parts[2]);
+          if (year < 100) {
+            year = year < 50 ? 2000 + year : 1900 + year;
+          }
+          return new Date(year, month, day);
+        }
+        return new Date(dateString);
+      } catch {
+        return new Date();
+      }
+    }
+
+    // Render loan
+    function renderLoan(loan) {
+      return `
+        <div class="loan">
+          <div class="loan-header">
+            <h3>${loan.name}</h3>
+            <span class="loan-date">${loan.dateIssued}</span>
+          </div>
+          <div class="loan-details">
+            <p>Phone: ${loan.phone}</p>
+            <p>Principal: ${formatCurrency(loan.principal)}</p>
+            <p>Total Due: ${formatCurrency(loan.totalDue)}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Parse CSV to loans
+    function parseCSVToLoans(csvText) {
+      console.log('Starting CSV parsing...');
+      
+      // Split the CSV text into lines
+      const lines = csvText.split(/\r?\n/);
+      console.log('CSV has ' + lines.length + ' lines');
+      
+      const loans = [];
+      const headers = lines[0].split(',');
+      
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) {
+          continue;
+        }
+        
+        const values = lines[i].split(',');
+        
+        if (values.length < 3) {
+          continue;
+        }
+        
+        // Parse numeric values, handling currency formatting
+        const principal = parseFloat((values[3] || '0').replace(/[^0-9.-]+/g, '') || '0');
+        const totalDue = parseFloat((values[6] || '0').replace(/[^0-9.-]+/g, '') || '0') || principal * 1.2;
+        
+        // Create the loan object
+        const loan = {
+          name: values[0] || '',
+          phone: values[1] || '',
+          dateIssued: values[2] || '',
+          principal: principal,
+          totalDue: totalDue
+        };
+        
+        loans.push(loan);
+      }
+      
+      console.log('Successfully parsed ' + loans.length + ' loans');
+      return loans;
+    }
+
+    // Display loans
+    function displayLoans(loans) {
+      const container = document.getElementById('loanList');
+      if (!container) {
+        console.error('Loan list container not found');
+        return;
+      }
+      
+      if (loans.length > 0) {
+        let loansHtml = '';
+        for (let i = 0; i < loans.length; i++) {
+          loansHtml += renderLoan(loans[i]);
+        }
+        container.innerHTML = loansHtml;
+        
+        console.log('Displayed ' + loans.length + ' loans');
+      } else {
+        container.innerHTML = '<p class="no-results">No loans found</p>';
+        console.log('No loans to display');
+      }
+    }
+
+    // Load CSV data
+    async function loadCSVData() {
+      try {
+        console.log('Starting CSV data loading...');
+        
+        const response = await fetch('/api/csv-data');
+        if (!response.ok) {
+          throw new Error('Failed to load CSV data');
+        }
+        
+        const text = await response.text();
+        console.log('CSV text loaded, parsing...');
+        
+        const loans = parseCSVToLoans(text);
+        displayLoans(loans);
+        
+      } catch (error) {
+        console.error('Error loading CSV:', error);
+        document.getElementById('loanList').innerHTML = '<p class="error-message">Failed to load loan data. Please check your connection and try again.</p>';
+      }
+    }
+
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM fully loaded, loading data...');
+      loadCSVData();
+    });
+  </script>
+</body>
+</html>

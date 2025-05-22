@@ -1,0 +1,6 @@
+
+import os
+print("Current working directory:", os.getcwd())
+print("Files in current directory:")
+print(os.listdir("."))
+
