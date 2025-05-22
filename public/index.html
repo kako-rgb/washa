@@ -360,6 +360,14 @@
   <script src="js/api.js"></script>
   
   <script>
+    let cachedConnection = null;
+
+export default async function handler(req, res) {
+  if (!cachedConnection) {
+    cachedConnection = await mongoose.connect(process.env.MONGODB_URI);
+  }
+  // Your code here
+}
     // Global variables
     let allLoans = [];
     let filteredLoans = [];
