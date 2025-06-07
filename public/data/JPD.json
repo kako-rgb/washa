@@ -1,0 +1,482 @@
+[
+  {
+    "_id": "fallback-updated-loans-0",
+    "fullName": "Kevin Omondi",
+    "phone": "717100064",
+    "amount": 5000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Kevin Omondi",
+      "email": "",
+      "phone": "717100064"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-1",
+    "fullName": "Joan Owino",
+    "phone": "741392772",
+    "amount": 3000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Joan Owino",
+      "email": "",
+      "phone": "741392772"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-2",
+    "fullName": "sheols Awino",
+    "phone": "713624615",
+    "amount": 10000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "sheols Awino",
+      "email": "",
+      "phone": "713624615"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-3",
+    "fullName": "Dennis Okoth",
+    "phone": "740181820",
+    "amount": 5000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Dennis Okoth",
+      "email": "",
+      "phone": "740181820"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-4",
+    "fullName": "Edwin Otieno",
+    "phone": "715672263",
+    "amount": 5000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Edwin Otieno",
+      "email": "",
+      "phone": "715672263"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-5",
+    "fullName": "Domostica Aluoch",
+    "phone": "792479127",
+    "amount": 3000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Domostica Aluoch",
+      "email": "",
+      "phone": "792479127"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-6",
+    "fullName": "Iren Atieno",
+    "phone": "729348036",
+    "amount": 6000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Iren Atieno",
+      "email": "",
+      "phone": "729348036"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-7",
+    "fullName": "scholastice Auma",
+    "phone": "11389071",
+    "amount": 5000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "scholastice Auma",
+      "email": "",
+      "phone": "11389071"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-8",
+    "fullName": "Hellen Atieno",
+    "phone": "700845930",
+    "amount": 8000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Hellen Atieno",
+      "email": "",
+      "phone": "700845930"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-9",
+    "fullName": "Joyce Owino",
+    "phone": "725450395",
+    "amount": 20000,
+    "date": "15th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Joyce Owino",
+      "email": "",
+      "phone": "725450395"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-10",
+    "fullName": "Truphosa Evelyne",
+    "phone": "794397701",
+    "amount": 7000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Truphosa Evelyne",
+      "email": "",
+      "phone": "794397701"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-11",
+    "fullName": "Everlyne Atieno Odeyo",
+    "phone": "728721787",
+    "amount": 10000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Everlyne Atieno Odeyo",
+      "email": "",
+      "phone": "728721787"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-12",
+    "fullName": "Prisca Achieng",
+    "phone": "743142493",
+    "amount": 8000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Prisca Achieng",
+      "email": "",
+      "phone": "743142493"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-13",
+    "fullName": "Caroline Achieng",
+    "phone": "794170054",
+    "amount": 5000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Caroline Achieng",
+      "email": "",
+      "phone": "794170054"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-14",
+    "fullName": "Joan Achieng",
+    "phone": "721458901",
+    "amount": 8000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Joan Achieng",
+      "email": "",
+      "phone": "721458901"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-15",
+    "fullName": "Dorothy Mirriam",
+    "phone": "708425822",
+    "amount": 5000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Dorothy Mirriam",
+      "email": "",
+      "phone": "708425822"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-16",
+    "fullName": "Millicent Oloo",
+    "phone": "792255600",
+    "amount": 10000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Millicent Oloo",
+      "email": "",
+      "phone": "792255600"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-17",
+    "fullName": "Michael Wasonga",
+    "phone": "716789628",
+    "amount": 10000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Michael Wasonga",
+      "email": "",
+      "phone": "716789628"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-18",
+    "fullName": "Lollian Awino",
+    "phone": "714170940",
+    "amount": 3000,
+    "date": "5th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Lollian Awino",
+      "email": "",
+      "phone": "714170940"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-19",
+    "fullName": "Rose Omulu",
+    "phone": "700261173",
+    "amount": 5000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Rose Omulu",
+      "email": "",
+      "phone": "700261173"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-20",
+    "fullName": "Jenopher Adhiambo Okoth ",
+    "phone": "706144800",
+    "amount": 3000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Jenopher Adhiambo Okoth ",
+      "email": "",
+      "phone": "706144800"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-21",
+    "fullName": "Caroline Obongo",
+    "phone": "719309438",
+    "amount": 10000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Caroline Obongo",
+      "email": "",
+      "phone": "719309438"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-22",
+    "fullName": "Tabotha Akinyi Onyango",
+    "phone": "718911453",
+    "amount": 5000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Tabotha Akinyi Onyango",
+      "email": "",
+      "phone": "718911453"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-23",
+    "fullName": "Jane Anyango Mululu",
+    "phone": "111893053",
+    "amount": 8000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Jane Anyango Mululu",
+      "email": "",
+      "phone": "111893053"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-24",
+    "fullName": "Regina Atieno",
+    "phone": "702159662",
+    "amount": 3000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Regina Atieno",
+      "email": "",
+      "phone": "702159662"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-25",
+    "fullName": "Kevin Okoth",
+    "phone": "790687213",
+    "amount": 5000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Kevin Okoth",
+      "email": "",
+      "phone": "790687213"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-26",
+    "fullName": "Irine Awuor",
+    "phone": "794758775",
+    "amount": 5000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Irine Awuor",
+      "email": "",
+      "phone": "794758775"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-27",
+    "fullName": "Beryl Atieno",
+    "phone": "114343421",
+    "amount": 3000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Beryl Atieno",
+      "email": "",
+      "phone": "114343421"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-28",
+    "fullName": "Sophia Awino",
+    "phone": "715320880",
+    "amount": 5000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Sophia Awino",
+      "email": "",
+      "phone": "715320880"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  },
+  {
+    "_id": "fallback-updated-loans-29",
+    "fullName": "Evelyne Akinyi",
+    "phone": "728469225",
+    "amount": 5000,
+    "date": "6th may 2025",
+    "status": "pending",
+    "source": "fallback-updated-loans",
+    "borrower": {
+      "fullName": "Evelyne Akinyi",
+      "email": "",
+      "phone": "728469225"
+    },
+    "purpose": "Not specified",
+    "term": "30"
+  }
+]

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Management - Washa Enterprises</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Mobile Navbar (visible only on small screens) -->
+    <nav class="mobile-navbar">
+        <div class="mobile-navbar-content">
+            <h1 class="mobile-navbar-title">Washa Enterprises</h1>
+            <div class="mobile-navbar-actions">
+                <a href="#" id="mobile-change-password-btn" class="mobile-navbar-action">
+                    <i class="fas fa-key"></i>
+                </a>
+                <a href="#" id="mobile-logout-btn" class="mobile-navbar-action">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+                <button id="mobile-sidebar-toggle" class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>Washa Enterprises</h2>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="user-management.html">
+                        <i class="fas fa-users"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="loan-management.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Loans</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="payment-processing.html">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Payments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reports.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" id="change-password-btn">
+                    <i class="fas fa-key"></i>
+                    <span>Change Password</span>
+                </a>
+                <a href="#" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="user-info">
+                    <span id="user-name">Admin User</span>
+                    <span id="user-role">Administrator</span>
+                </div>
+            </header>
+
+            <div class="loan-management-container">
+                <div class="page-header">
+                    <h1>Loan Management</h1>
+                    <div class="action-buttons">
+                        <button id="new-loan-application-btn" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> New Loan Application
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loan Tabs -->
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="applications">Applications</button>
+                        <button class="tab-btn" data-tab="active-loans">Active Loans</button>
+                        <button class="tab-btn" data-tab="disbursements">Disbursements</button>
+                        <button class="tab-btn" data-tab="repayments">Repayment Schedules</button>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="search-filter-container">
+                        <div class="search-box">
+                            <input type="text" id="loan-search" placeholder="Search loans...">
+                            <select id="search-type" class="search-type">
+                                <option value="all">All Fields</option>
+                                <option value="id">ID Number</option>
+                                <option value="name">Name</option>
+                                <option value="phone">Phone Number</option>
+                            </select>
+                            <button id="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="filter-options">
+                            <select id="status-filter">
+                                <option value="">All Statuses</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="disbursed">Disbursed</option>
+                                <option value="completed">Completed</option>
+                                <option value="defaulted">Defaulted</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <!-- Applications Tab -->
+                        <div class="tab-pane active" id="applications-tab">
+                            <div class="table-container">
+                                <table class="data-table" id="applications-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Applicant</th>
+                                            <th>Amount</th>
+                                            <th>Term</th>
+                                            <th>Purpose</th>
+                                            <th>Application Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="8" class="loading-message">Loading applications...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Active Loans Tab -->
+                        <div class="tab-pane" id="active-loans-tab">
+                            <div class="table-container">
+                                <table class="data-table" id="active-loans-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Borrower</th>
+                                            <th>Amount</th>
+                                            <th>Term</th>
+                                            <th>Interest Rate</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="9" class="loading-message">Loading active loans...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Disbursements Tab -->
+                        <div class="tab-pane" id="disbursements-tab">
+                            <div class="table-container">
+                                <table class="data-table" id="disbursements-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Loan ID</th>
+                                            <th>Borrower</th>
+                                            <th>Amount</th>
+                                            <th>Disbursement Date</th>
+                                            <th>Method</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="8" class="loading-message">Loading disbursements...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Repayment Schedules Tab -->
+                        <div class="tab-pane" id="repayments-tab">
+                            <div class="table-container">
+                                <table class="data-table" id="repayments-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Loan ID</th>
+                                            <th>Borrower</th>
+                                            <th>Payment #</th>
+                                            <th>Due Date</th>
+                                            <th>Amount Due</th>
+                                            <th>Principal</th>
+                                            <th>Interest</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="9" class="loading-message">Loading repayment schedules...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" id="loans-pagination">
+                        <button class="pagination-btn" id="prev-page" disabled>
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <span class="pagination-info" id="pagination-info">Page 1 of 1</span>
+                        <button class="pagination-btn" id="next-page" disabled>
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loan Application Modal -->
+            <div class="modal" id="loan-application-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 id="loan-modal-title">New Loan Application</h2>
+                        <button class="close-btn" id="close-loan-modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="loan-application-form">
+                            <input type="hidden" id="loan-id">
+                            <div class="form-group">
+                                <label for="borrower">Borrower</label>
+                                <select id="borrower" name="borrower" required>
+                                    <option value="">Select Borrower</option>
+                                    <!-- Will be populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="loan-amount">Loan Amount</label>
+                                <input type="number" id="loan-amount" name="loan-amount" min="1" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="loan-term">Loan Term (Months)</label>
+                                <input type="number" id="loan-term" name="loan-term" min="1" max="60" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="interest-rate">Interest Rate (%)</label>
+                                <input type="number" id="interest-rate" name="interest-rate" min="0" max="100" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="loan-purpose">Purpose</label>
+                                <textarea id="loan-purpose" name="loan-purpose" rows="3" required></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" id="cancel-loan-form">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Submit Application</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loan Review Modal -->
+            <div class="modal" id="loan-review-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Review Loan Application</h2>
+                        <button class="close-btn" id="close-review-modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="loan-details" id="loan-details">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                        <div class="form-group">
+                            <label for="review-notes">Review Notes</label>
+                            <textarea id="review-notes" name="review-notes" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" id="reject-loan-btn">Reject</button>
+                            <button type="button" class="btn btn-success" id="approve-loan-btn">Approve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disbursement Modal -->
+            <div class="modal" id="disbursement-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Disburse Loan</h2>
+                        <button class="close-btn" id="close-disbursement-modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="loan-details" id="disbursement-loan-details">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                        <form id="disbursement-form">
+                            <div class="form-group">
+                                <label for="disbursement-method">Disbursement Method</label>
+                                <select id="disbursement-method" name="disbursement-method" required>
+                                    <option value="">Select Method</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="mobile_money">Mobile Money</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="check">Check</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="disbursement-date">Disbursement Date</label>
+                                <input type="date" id="disbursement-date" name="disbursement-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="disbursement-notes">Notes</label>
+                                <textarea id="disbursement-notes" name="disbursement-notes" rows="3"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" id="cancel-disbursement">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Confirm Disbursement</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/db-status.js"></script>
+    <script src="js/payment-integration.js"></script>
+    <script src="js/loan-management.js"></script>
+    <script>
+        // Toggle mobile sidebar
+        document.getElementById('mobile-sidebar-toggle')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+
+        // Toggle sidebar
+        document.getElementById('sidebar-toggle')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+            document.querySelector('.main-content').classList.toggle('expanded');
+        });
+    </script>
+</body>
+</html>

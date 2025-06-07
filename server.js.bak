@@ -1,0 +1,1433 @@
+// Backend API for Washa Enterprises Loan Management System
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+
+
+// Load environment variables
+dotenv.config();
+
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Middleware
+app.use(cors({
+    origin: ['http://localhost', 'http://127.0.0.1', 'http://127.0.0.1:5500'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+// MongoDB Atlas Connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://kakotechnology:Gladyswi11y2020@cluster0.dfv4h.mongodb.net/?retryWrites=true&w=majority&washa=Cluster0';
+
+mongoose.connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    dbName: 'washaLoans'
+})
+.then(async () => {
+    console.log('Connected to MongoDB Atlas');
+    await createAdminUser();
+})
+.catch(err => console.error('MongoDB connection error:', err));
+
+// Define Schemas
+const userSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    fullName: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    role: { type: String, enum: ['admin', 'loan_officer', 'customer'], default: 'customer' },
+    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    createdAt: { type: Date, default: Date.now },
+    lastLogin: { type: Date }
+});
+
+const borrowerSchema = new mongoose.Schema({
+    fullName: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    address: { type: String, required: true },
+    idNumber: { type: String, required: true },
+    employmentStatus: { type: String, required: true },
+    monthlyIncome: { type: Number, required: true },
+    createdAt: { type: Date, default: Date.now },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+});
+
+const loanSchema = new mongoose.Schema({
+    borrower: { type: mongoose.Schema.Types.ObjectId, ref: 'Borrower', required: true },
+    amount: { type: Number, required: true },
+    interestRate: { type: Number, required: true },
+    term: { type: Number, required: true }, // in months
+    purpose: { type: String, required: true },
+    status: { 
+        type: String, 
+        enum: ['pending', 'approved', 'active', 'completed', 'rejected', 'defaulted'], 
+        default: 'pending' 
+    },
+    approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    approvedDate: { type: Date },
+    disbursementDate: { type: Date },
+    disbursementMethod: { type: String, enum: ['bank_transfer', 'mobile_money', 'cash'] },
+    startDate: { type: Date },
+    endDate: { type: Date },
+    createdAt: { type: Date, default: Date.now },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    notes: { type: String }
+});
+
+const paymentSchema = new mongoose.Schema({
+    loan: { type: mongoose.Schema.Types.ObjectId, ref: 'Loan', required: true },
+    paymentNumber: { type: Number, required: true },
+    dueDate: { type: Date, required: true },
+    amountDue: { type: Number, required: true },
+    principal: { type: Number, required: true },
+    interest: { type: Number, required: true },
+    paymentDate: { type: Date },
+    amountPaid: { type: Number },
+    method: { type: String, enum: ['bank_transfer', 'mobile_money', 'cash', 'check'] },
+    status: { type: String, enum: ['pending', 'paid', 'late'], default: 'pending' },
+    processedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    notes: { type: String }
+});
+
+// Create models
+const User = mongoose.model('User', userSchema);
+const Borrower = mongoose.model('Borrower', borrowerSchema);
+const Loan = mongoose.model('Loan', loanSchema);
+const Payment = mongoose.model('Payment', paymentSchema);
+
+// JWT Secret
+const JWT_SECRET = process.env.JWT_SECRET || 'washa-enterprises-secret-key';
+
+// Authentication Middleware
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
+    
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Invalid token.' });
+        req.user = user;
+        next();
+    });
+};
+
+// Role-based Authorization Middleware
+const authorize = (roles = []) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
+        }
+        next();
+    };
+};
+
+// Routes
+
+// Auth Routes
+app.get('/api/auth/me', authenticateToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json({ user });
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.post('/api/auth/change-password', authenticateToken, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        
+        // Find user
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        // Verify current password
+        const validPassword = await bcrypt.compare(currentPassword, user.password);
+        if (!validPassword) {
+            return res.status(400).json({ message: 'Current password is incorrect' });
+        }
+        
+        // Hash new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        
+        // Update password
+        user.password = hashedPassword;
+        await user.save();
+        
+        res.json({ message: 'Password updated successfully' });
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.status(500).json({ message: 'Error changing password' });
+    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        
+        // Find user
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid username or password.' });
+        }
+        
+        // Check if user is active
+        if (user.status !== 'active') {
+            return res.status(403).json({ message: 'Account is inactive. Please contact administrator.' });
+        }
+        
+        // Validate password
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(400).json({ message: 'Invalid username or password.' });
+        }
+        
+        // Update last login
+        user.lastLogin = new Date();
+        await user.save();
+        
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user._id, username: user.username, role: user.role },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+        
+        // Return user info without password
+        const { password: _, ...userWithoutPassword } = user.toObject();
+        
+        res.status(200).json({
+            token,
+            user: userWithoutPassword,
+            message: 'Logged in successfully'
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Server error during login.' });
+    }
+});
+
+// Registration route
+app.post('/api/auth/register', async (req, res) => {
+    try {
+        const { username, password, fullName, email, role } = req.body;
+        
+        // Validate input
+        if (!username || !password || !fullName || !email) {
+            return res.status(400).json({ message: 'Please provide all required fields.' });
+        }
+        
+        // Check if user already exists
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists with this username or email.' });
+        }
+        
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        
+        // Create new user
+        const user = new User({
+            username,
+            password: hashedPassword,
+            fullName,
+            email,
+            role: role || 'customer',
+            status: 'active'
+        });
+        
+        await user.save();
+        
+        // Don't send password back
+        const { password: _, ...userWithoutPassword } = user.toObject();
+        
+        res.status(201).json({ 
+            message: 'User registered successfully.',
+            user: userWithoutPassword
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Server error during registration.' });
+    }
+});
+
+// Verify token endpoint
+app.get('/api/auth/verify', authenticateToken, (req, res) => {
+    res.json({ user: req.user });
+});
+
+// Password Reset Route
+app.post('/api/auth/reset-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        
+        // Generate reset token
+        const resetToken = jwt.sign(
+            { userId: user._id },
+            JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+        
+        // In a production environment, you would send an email here
+        // For development, we'll just update the password to a temporary one
+        const tempPassword = Math.random().toString(36).slice(-8);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(tempPassword, salt);
+        
+        user.password = hashedPassword;
+        await user.save();
+        
+        // In production, send email with reset link
+        console.log('Temporary password:', tempPassword);
+        
+        res.status(200).json({ 
+            message: 'Password reset instructions sent to email.',
+            // For development only:
+            tempPassword: tempPassword
+        });
+    } catch (error) {
+        console.error('Error in password reset:', error);
+        res.status(500).json({ message: 'Server error during password reset.' });
+    }
+});
+
+// User Routes
+app.get('/api/users', authenticateToken, authorize(['admin']), async (req, res) => {
+    try {
+        const users = await User.find().select('-password');
+        res.status(200).json({ users });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ message: 'Server error while fetching users.' });
+    }
+});
+
+app.get('/api/users/:id', authenticateToken, authorize(['admin']), async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).json({ user });
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Server error while fetching user.' });
+    }
+});
+
+app.post('/api/users', authenticateToken, authorize(['admin']), async (req, res) => {
+    try {
+        const { username, password, fullName, email, role } = req.body;
+        
+        // Check if user already exists
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists with this username or email.' });
+        }
+        
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        
+        // Create new user
+        const user = new User({
+            username,
+            password: hashedPassword,
+            fullName,
+            email,
+            role: role || 'customer'
+        });
+        
+        await user.save();
+        
+        res.status(201).json({ 
+            message: 'User created successfully.',
+            user: {
+                id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role,
+                status: user.status
+            }
+        });
+    } catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).json({ message: 'Server error while creating user.' });
+    }
+});
+
+app.put('/api/users/:id', authenticateToken, authorize(['admin']), async (req, res) => {
+    try {
+        const { fullName, email, role, status } = req.body;
+        
+        // Find user
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        
+        // Update user
+        user.fullName = fullName || user.fullName;
+        user.email = email || user.email;
+        user.role = role || user.role;
+        user.status = status || user.status;
+        
+        await user.save();
+        
+        res.status(200).json({ 
+            message: 'User updated successfully.',
+            user: {
+                id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role,
+                status: user.status
+            }
+        });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Server error while updating user.' });
+    }
+});
+
+app.put('/api/users/:id/password', authenticateToken, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        
+        // Check if user is admin or the user themselves
+        if (req.user.role !== 'admin' && req.user.id !== req.params.id) {
+            return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
+        }
+        
+        // Find user
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        
+        // If not admin, validate current password
+        if (req.user.role !== 'admin') {
+            const validPassword = await bcrypt.compare(currentPassword, user.password);
+            if (!validPassword) {
+                return res.status(400).json({ message: 'Current password is incorrect.' });
+            }
+        }
+        
+        // Hash new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        
+        // Update password
+        user.password = hashedPassword;
+        await user.save();
+        
+        res.status(200).json({ message: 'Password updated successfully.' });
+    } catch (error) {
+        console.error('Error updating password:', error);
+        res.status(500).json({ message: 'Server error while updating password.' });
+    }
+});
+
+// Borrower Routes
+app.get('/api/borrowers', authenticateToken, async (req, res) => {
+    try {
+        const { search } = req.query;
+        let query = {};
+        
+        if (search) {
+            query = {
+                $or: [
+                    { fullName: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } },
+                    { phone: { $regex: search, $options: 'i' } },
+                    { idNumber: { $regex: search, $options: 'i' } }
+                ]
+            };
+        }
+        
+        const borrowers = await Borrower.find(query);
+        res.status(200).json({ borrowers });
+    } catch (error) {
+        console.error('Error fetching borrowers:', error);
+        res.status(500).json({ message: 'Server error while fetching borrowers.' });
+    }
+});
+
+app.get('/api/borrowers/:id', authenticateToken, async (req, res) => {
+    try {
+        const borrower = await Borrower.findById(req.params.id);
+        if (!borrower) {
+            return res.status(404).json({ message: 'Borrower not found.' });
+        }
+        
+        // Get loans for this borrower
+        const loans = await Loan.find({ borrower: borrower._id });
+        
+        res.status(200).json({ borrower, loans });
+    } catch (error) {
+        console.error('Error fetching borrower:', error);
+        res.status(500).json({ message: 'Server error while fetching borrower.' });
+    }
+});
+
+app.post('/api/borrowers', authenticateToken, authorize(['admin', 'loan_officer']), async (req, res) => {
+    try {
+        const { fullName, email, phone, address, idNumber, employmentStatus, monthlyIncome } = req.body;
+        
+        // Create new borrower
+        const borrower = new Borrower({
+            fullName,
+            email,
+            phone,
+            address,
+            idNumber,
+            employmentStatus,
+            monthlyIncome,
+            createdBy: req.user.id
+        });
+        
+        await borrower.save();
+        
+        res.status(201).json({ 
+            message: 'Borrower created successfully.',
+            borrower
+        });
+    } catch (error) {
+        console.error('Error creating borrower:', error);
+        res.status(500).json({ message: 'Server error while creating borrower.' });
+    }
+});
+
+app.put('/api/borrowers/:id', authenticateToken, authorize(['admin', 'loan_officer']), async (req, res) => {
+    try {
+        const { fullName, email, phone, address, employmentStatus, monthlyIncome } = req.body;
+        
+        // Find borrower
+        const borrower = await Borrower.findById(req.params.id);
+        if (!borrower) {
+            return res.status(404).json({ message: 'Borrower not found.' });
+        }
+        
+        // Update borrower
+        borrower.fullName = fullName || borrower.fullName;
+        borrower.email = email || borrower.email;
+        borrower.phone = phone || borrower.phone;
+        borrower.address = address || borrower.address;
+        borrower.employmentStatus = employmentStatus || borrower.employmentStatus;
+        borrower.monthlyIncome = monthlyIncome || borrower.monthlyIncome;
+        
+        await borrower.save();
+        
+        res.status(200).json({ 
+            message: 'Borrower updated successfully.',
+            borrower
+        });
+    } catch (error) {
+        console.error('Error updating borrower:', error);
+        res.status(500).json({ message: 'Server error while updating borrower.' });
+    }
+});
+
+// Loan Routes
+app.get('/api/loans', authenticateToken, async (req, res) => {
+    try {
+        const { status, search, page = 1, limit = 10 } = req.query;
+        let query = {};
+        
+        if (status) {
+            query.status = status;
+        }
+        
+        if (search) {
+            // We need to find borrowers matching the search first
+            const borrowers = await Borrower.find({
+                fullName: { $regex: search, $options: 'i' }
+            });
+            
+            const borrowerIds = borrowers.map(b => b._id);
+            
+            query = {
+                ...query,
+                $or: [
+                    { borrower: { $in: borrowerIds } },
+                    { _id: search.match(/^[0-9a-fA-F]{24}$/) ? search : null }
+                ]
+            };
+        }
+        
+        const skip = (page - 1) * limit;
+        
+        const loans = await Loan.find(query)
+            .populate('borrower', 'fullName email phone')
+            .populate('approvedBy', 'fullName')
+            .populate('createdBy', 'fullName')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(parseInt(limit));
+            
+        const totalLoans = await Loan.countDocuments(query);
+        const totalPages = Math.ceil(totalLoans / limit);
+        
+        res.status(200).json({ 
+            loans,
+            pagination: {
+                totalLoans,
+                totalPages,
+                currentPage: parseInt(page),
+                limit: parseInt(limit)
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching loans:', error);
+        res.status(500).json({ message: 'Server error while fetching loans.' });
+    }
+});
+
+app.get('/api/loans/:id', authenticateToken, async (req, res) => {
+    try {
+        const loan = await Loan.findById(req.params.id)
+            .populate('borrower', 'fullName email phone address idNumber employmentStatus monthlyIncome')
+            .populate('approvedBy', 'fullName')
+            .populate('createdBy', 'fullName');
+            
+        if (!loan) {
+            return res.status(404).json({ message: 'Loan not found.' });
+        }
+        
+        // Get payments for this loan
+        const payments = await Payment.find({ loan: loan._id })
+            .populate('processedBy', 'fullName')
+            .sort({ paymentNumber: 1 });
+        
+        res.status(200).json({ loan, payments });
+    } catch (error) {
+        console.error('Error fetching loan:', error);
+        res.status(500).json({ message: 'Server error while fetching loan.' });
+    }
+});
+
+app.post('/api/loans', authenticateToken, authorize(['admin', 'loan_officer']), async (req, res) => {
+    try {
+        const { 
+            borrowerId, 
+            amount, 
+            interestRate, 
+            term, 
+            purpose, 
+            status,
+            notes
+        } = req.body;
+        
+        // Find borrower
+        const borrower = await Borrower.findById(borrowerId);
+        if (!borrower) {
+            return res.status(404).json({ message: 'Borrower not found.' });
+        }
+        
+        // Create new loan
+        const loan = new Loan({
+            borrower: borrower._id,
+            amount,
+            interestRate,
+            term,
+            purpose,
+            status: status || 'pending',
+            notes,
+            createdBy: req.user.id
+        });
+        
+        await loan.save();
+        
+        res.status(201).json({ 
+            message: 'Loan application submitted successfully.',
+            loan
+        });
+    } catch (error) {
+        console.error('Error creating loan:', error);
+        res.status(500).json({ message: 'Server error while creating loan.' });
+    }
+});
+
+app.put('/api/loans/:id', authenticateToken, authorize(['admin', 'loan_officer']), async (req, res) => {
+    try {
+        const { 
+            amount, 
+            interestRate, 
+            term, 
+            purpose, 
+            status,
+            notes
+        } = req.body;
+        
+        // Find loan
+        const loan = await Loan.findById(req.params.id);
+        if (!loan) {
+            return res.status(404).json({ message: 'Loan not found.' });
+        }
+        
+        // Check if loan can be updated
+        if (loan.status !== 'pending' && req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Loan cannot be updated after approval.' });
+        }
+        
+        // Update loan
+        loan.amount = amount || loan.amount;
+        loan.interestRate = interestRate || loan.interestRate;
+        loan.term = term || loan.term;
+        loan.purpose = purpose || loan.purpose;
+        loan.notes = notes || loan.notes;
+        
+        // If status is changing to approved, set approval details
+        if (status === 'approved' && loan.status !== 'approved') {
+            loan.status = 'approved';
+            loan.approvedBy = req.user.id;
+            loan.approvedDate = new Date();
+        } else if (status) {
+            loan.status = status;
+        }
+        
+        await loan.save();
+        
+        res.status(200).json({ 
+            message: 'Loan updated successfully.',
+            loan
+        });
+    } catch (error) {
+        console.error('Error updating loan:', error);
+        res.status(500).json({ message: 'Server error while updating loan.' });
+    }
+});
+
+app.post('/api/loans/:id/disburse', authenticateToken, authorize(['admin', 'loan_officer']), async (req, res) => {
+    try {
+        const { disbursementMethod } = req.body;
+        
+        // Find loan
+        const loan = await Loan.findById(req.params.id);
+        if (!loan) {
+            return res.status(404).json({ message: 'Loan not found.' });
+        }
+        
+        // Check if loan can be disbursed
+        if (loan.status !== 'approved') {
+            return res.status(400).json({ message: 'Loan must be approved before disbursement.' });
+        }
+        
+        // Update loan
+        loan.status = 'active';
+        loan.disbursementDate = new Date();
+        loan.disbursementMethod = disbursementMethod;
+        loan.startDate = new Date();
+        
+        // Calculate end date
+        const endDate = new Date(loan.startDate);
+        endDate.setMonth(endDate.getMonth() + loan.term);
+        loan.endDate = endDate;
+        
+        await loan.save();
+        
+        // Generate payment schedule
+        await generatePaymentSchedule(loan);
+        
+        res.status(200).json({ 
+            message: 'Loan disbursed successfully.',
+            loan
+        });
+    } catch (error) {
+        console.error('Error disbursing loan:', error);
+        res.status(500).json({ message: 'Server error while disbursing loan.' });
+    }
+});
+
+// Helper function to generate payment schedule
+async function generatePaymentSchedule(loan) {
+    try {
+        // Calculate monthly payment (principal + interest)
+        const monthlyInterestRate = loan.interestRate / 100 / 12;
+        const monthlyPayment = (loan.amount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loan.term)) / 
+                              (Math.pow(1 + monthlyInterestRate, loan.term) - 1);
+        
+        let remainingBalance = loan.amount;
+        
+        // Delete any existing payment schedule
+        await Payment.deleteMany({ loan: loan._id });
+        
+        // Create payment schedule
+        for (let i = 1; i <= loan.term; i++) {
+            const dueDate = new Date(loan.startDate);
+            dueDate.setMonth(dueDate.getMonth() + i);
+            
+            const interestPayment = remainingBalance * monthlyInterestRate;
+            const principalPayment = monthlyPayment - interestPayment;
+            
+            remainingBalance -= principalPayment;
+            
+            // Create payment record
+            const payment = new Payment({
+                loan: loan._id,
+                paymentNumber: i,
+                dueDate,
+                amountDue: monthlyPayment,
+                principal: principalPayment,
+                interest: interestPayment,
+                status: 'pending'
+            });
+            
+            await payment.save();
+        }
+    } catch (error) {
+        console.error('Error generating payment schedule:', error);
+        throw error;
+    }
+}
+
+// Payment Routes
+app.get('/api/payments', authenticateToken, async (req, res) => {
+    try {
+        const { status, search, page = 1, limit = 10 } = req.query;
+        let query = {};
+        
+        if (status) {
+            query.status = status;
+        }
+        
+        if (search) {
+            // Find loans by borrower name
+            const borrowers = await Borrower.find({
+                fullName: { $regex: search, $options: 'i' }
+            });
+            
+            const loans = await Loan.find({
+                borrower: { $in: borrowers.map(b => b._id) }
+            });
+            
+            query = {
+                ...query,
+                loan: { $in: loans.map(l => l._id) }
+            };
+        }
+        
+        const skip = (page - 1) * limit;
+        
+        const payments = await Payment.find(query)
+            .populate({
+                path: 'loan',
+                populate: {
+                    path: 'borrower',
+                    select: 'fullName'
+                }
+            })
+            .populate('processedBy', 'fullName')
+            .sort({ dueDate: 1 })
+            .skip(skip)
+            .limit(parseInt(limit));
+            
+        const totalPayments = await Payment.countDocuments(query);
+        const totalPages = Math.ceil(totalPayments / limit);
+        
+        // Format payments for frontend
+        const formattedPayments = payments.map(payment => ({
+            id: payment._id,
+            loanId: payment.loan._id,
+            paymentNumber: payment.paymentNumber,
+            borrower: {
+                id: payment.loan.borrower._id,
+                name: payment.loan.borrower.fullName
+            },
+            dueDate: payment.dueDate,
+            amountDue: payment.amountDue,
+            paymentDate: payment.paymentDate,
+            amountPaid: payment.amountPaid,
+            method: payment.method,
+            status: payment.status,
+            processedBy: payment.processedBy ? payment.processedBy.fullName : null
+        }));
+        
+        res.status(200).json({ 
+            payments: formattedPayments,
+            pagination: {
+                totalPayments,
+                totalPages,
+                currentPage: parseInt(page),
+                limit: parseInt(limit)
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching payments:', error);
+        res.status(500).json({ message: 'Server error while fetching payments.' });
+    }
+});
+
+app.get('/api/loans/:loanId/payments', authenticateToken, async (req, res) => {
+    try {
+        const { status } = req.query;
+        let query = { loan: req.params.loanId };
+        
+        if (status) {
+            query.status = status;
+        }
+        
+        const payments = await Payment.find(query)
+            .populate('processedBy', 'fullName')
+            .sort({ paymentNumber: 1 });
+            
+        res.status(200).json({ payments });
+    } catch (error) {
+        console.error('Error fetching loan payments:', error);
+        res.status(500).json({ message: 'Server error while fetching loan payments.' });
+    }
+});
+
+app.get('/api/loans/:loanId/payments/:paymentNumber', authenticateToken, async (req, res) => {
+    try {
+        const payment = await Payment.findOne({
+            loan: req.params.loanId,
+            paymentNumber: req.params.paymentNumber
+        })
+        .populate({
+            path: 'loan',
+            populate: {
+                path: 'borrower',
+                select: 'fullName'
+            }
+        })
+        .populate('processedBy', 'fullName');
+        
+        if (!payment) {
+            return res.status(404).json({ message: 'Payment not found.' });
+        }
+        
+        // Format payment for frontend
+        const formattedPayment = {
+            id: payment._id,
+            loanId: payment.loan._id,
+            paymentNumber: payment.paymentNumber,
+            borrower: {
+                id: payment.loan.borrower._id,
+                name: payment.loan.borrower.fullName
+            },
+            dueDate: payment.dueDate,
+            amountDue: payment.amountDue,
+            principal: payment.principal,
+            interest: payment.interest,
+            paymentDate: payment.paymentDate,
+            amountPaid: payment.amountPaid,
+            method: payment.method,
+            status: payment.status,
+            processedBy: payment.processedBy ? payment.processedBy.fullName : null,
+            notes: payment.notes
+        };
+        
+        res.status(200).json({ payment: formattedPayment });
+    } catch (error) {
+        console.error('Error fetching payment:', error);
+        res.status(500).json({ message: 'Server error while fetching payment.' });
+    }
+});
+
+app.post('/api/payments', authenticateToken, authorize(['admin', 'loan_officer']), async (req, res) => {
+    try {
+        const { loanId, paymentNumber, paymentDate, amountPaid, method, notes } = req.body;
+        
+        // Find payment
+        const payment = await Payment.findOne({
+            loan: loanId,
+            paymentNumber: paymentNumber
+        });
+        
+        if (!payment) {
+            return res.status(404).json({ message: 'Payment not found.' });
+        }
+        
+        // Check if payment is already paid
+        if (payment.status === 'paid') {
+            return res.status(400).json({ message: 'Payment has already been processed.' });
+        }
+        
+        // Update payment
+        payment.paymentDate = paymentDate;
+        payment.amountPaid = amountPaid;
+        payment.method = method;
+        payment.status = 'paid';
+        payment.processedBy = req.user.id;
+        payment.notes = notes;
+        
+        await payment.save();
+        
+        // Check if loan is completed
+        const loan = await Loan.findById(loanId);
+        const remainingPayments = await Payment.countDocuments({
+            loan: loanId,
+            status: 'pending'
+        });
+        
+        if (remainingPayments === 0 && loan.status === 'active') {
+            loan.status = 'completed';
+            await loan.save();
+        }
+        
+        res.status(200).json({ 
+            message: 'Payment recorded successfully.',
+            payment
+        });
+    } catch (error) {
+        console.error('Error recording payment:', error);
+        res.status(500).json({ message: 'Server error while recording payment.' });
+    }
+});
+
+app.post('/api/payments/import', authenticateToken, authorize(['admin', 'loan_officer']), async (req, res) => {
+    try {
+        const { payments } = req.body;
+        let importedCount = 0;
+        
+        for (const paymentData of payments) {
+            const { loanId, paymentNumber, paymentDate, amountPaid, method } = paymentData;
+            
+            // Find payment
+            const payment = await Payment.findOne({
+                loan: loanId,
+                paymentNumber: paymentNumber
+            });
+            
+            if (!payment || payment.status === 'paid') {
+                continue;
+            }
+            
+            // Update payment
+            payment.paymentDate = paymentDate;
+            payment.amountPaid = amountPaid;
+            payment.method = method;
+            payment.status = 'paid';
+            payment.processedBy = req.user.id;
+            
+            await payment.save();
+            importedCount++;
+            
+            // Check if loan is completed
+            const loan = await Loan.findById(loanId);
+            const remainingPayments = await Payment.countDocuments({
+                loan: loanId,
+                status: 'pending'
+            });
+            
+            if (remainingPayments === 0 && loan.status === 'active') {
+                loan.status = 'completed';
+                await loan.save();
+            }
+        }
+        
+        res.status(200).json({ 
+            message: `Successfully imported ${importedCount} payments.`,
+            imported: importedCount
+        });
+    } catch (error) {
+        console.error('Error importing payments:', error);
+        res.status(500).json({ message: 'Server error while importing payments.' });
+    }
+});
+
+// Report Routes
+app.get('/api/reports', authenticateToken, authorize(['admin', 'loan_officer']), async (req, res) => {
+    try {
+        const { type, startDate, endDate } = req.query;
+        
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        
+        let reportData;
+        
+        switch (type) {
+            case 'loan_summary':
+                reportData = await generateLoanSummaryReport(start, end);
+                break;
+            case 'payment_history':
+                reportData = await generatePaymentHistoryReport(start, end);
+                break;
+            case 'user_activity':
+                reportData = await generateUserActivityReport(start, end);
+                break;
+            case 'overdue_loans':
+                reportData = await generateOverdueLoansReport();
+                break;
+            case 'disbursement_report':
+                reportData = await generateDisbursementReport(start, end);
+                break;
+            default:
+                return res.status(400).json({ message: 'Invalid report type.' });
+        }
+        
+        res.status(200).json(reportData);
+    } catch (error) {
+        console.error('Error generating report:', error);
+        res.status(500).json({ message: 'Server error while generating report.' });
+    }
+});
+
+// Helper functions for reports
+async function generateLoanSummaryReport(startDate, endDate) {
+    // Get all loans
+    const allLoans = await Loan.find({
+        createdAt: { $gte: startDate, $lte: endDate }
+    });
+    
+    // Calculate totals
+    const totalLoans = allLoans.length;
+    const totalAmount = allLoans.reduce((sum, loan) => sum + loan.amount, 0);
+    
+    // Get active loans
+    const activeLoans = allLoans.filter(loan => loan.status === 'active');
+    const activeAmount = activeLoans.reduce((sum, loan) => sum + loan.amount, 0);
+    
+    // Get completed loans
+    const completedLoans = allLoans.filter(loan => loan.status === 'completed');
+    const completedAmount = completedLoans.reduce((sum, loan) => sum + loan.amount, 0);
+    
+    // Get defaulted loans
+    const defaultedLoans = allLoans.filter(loan => loan.status === 'defaulted');
+    const defaultedAmount = defaultedLoans.reduce((sum, loan) => sum + loan.amount, 0);
+    
+    // Calculate averages
+    const averageLoanAmount = totalLoans > 0 ? totalAmount / totalLoans : 0;
+    const averageTerm = totalLoans > 0 ? 
+        allLoans.reduce((sum, loan) => sum + loan.term, 0) / totalLoans : 0;
+    
+    // Get loans by purpose
+    const loansByPurpose = [];
+    const purposes = [...new Set(allLoans.map(loan => loan.purpose))];
+    
+    for (const purpose of purposes) {
+        const loansWithPurpose = allLoans.filter(loan => loan.purpose === purpose);
+        loansByPurpose.push({
+            purpose,
+            count: loansWithPurpose.length,
+            amount: loansWithPurpose.reduce((sum, loan) => sum + loan.amount, 0)
+        });
+    }
+    
+    // Get monthly data
+    const monthlyData = [];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    // Get disbursed loans by month
+    for (let i = 0; i < 12; i++) {
+        const monthStart = new Date(startDate.getFullYear(), i, 1);
+        const monthEnd = new Date(startDate.getFullYear(), i + 1, 0, 23, 59, 59);
+        
+        if (monthStart >= startDate && monthEnd <= endDate) {
+            const monthlyLoans = allLoans.filter(loan => {
+                const createdAt = new Date(loan.createdAt);
+                return createdAt >= monthStart && createdAt <= monthEnd;
+            });
+            
+            monthlyData.push({
+                month: months[i],
+                count: monthlyLoans.length,
+                amount: monthlyLoans.reduce((sum, loan) => sum + loan.amount, 0),
+                approved: monthlyLoans.filter(loan => loan.status === 'approved').length,
+                active: monthlyLoans.filter(loan => loan.status === 'active').length,
+                completed: monthlyLoans.filter(loan => loan.status === 'completed').length,
+                defaulted: monthlyLoans.filter(loan => loan.status === 'defaulted').length
+            });
+        }
+    }
+    
+    return {
+        totalLoans,
+        totalAmount,
+        activeLoans: activeLoans.length,
+        activeAmount,
+        completedLoans: completedLoans.length,
+        completedAmount,
+        defaultedLoans: defaultedLoans.length,
+        defaultedAmount,
+        averageLoanAmount,
+        averageTerm,
+        loansByPurpose,
+        monthlyData
+    };
+}
+
+async function generatePaymentHistoryReport(startDate, endDate) {
+    // Get all payments
+    const allPayments = await Payment.find({
+        paymentDate: { $gte: startDate, $lte: endDate },
+        status: 'paid'
+    }).populate({
+        path: 'loan',
+        populate: {
+            path: 'borrower',
+            select: 'fullName'
+        }
+    });
+    
+    // Calculate totals
+    const totalPayments = allPayments.length;
+    const totalAmount = allPayments.reduce((sum, payment) => sum + payment.amountPaid, 0);
+    const totalPrincipal = allPayments.reduce((sum, payment) => sum + payment.principal, 0);
+    const totalInterest = allPayments.reduce((sum, payment) => sum + payment.interest, 0);
+    
+    // Get payments by method
+    const paymentsByMethod = [];
+    const methods = ['bank_transfer', 'mobile_money', 'cash', 'check'];
+    
+    for (const method of methods) {
+        const paymentsWithMethod = allPayments.filter(payment => payment.method === method);
+        paymentsByMethod.push({
+            method,
+            count: paymentsWithMethod.length,
+            amount: paymentsWithMethod.reduce((sum, payment) => sum + payment.amountPaid, 0)
+        });
+    }
+    
+    // Get monthly data
+    const monthlyData = [];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    for (let i = 0; i < 12; i++) {
+        const monthStart = new Date(startDate.getFullYear(), i, 1);
+        const monthEnd = new Date(startDate.getFullYear(), i + 1, 0, 23, 59, 59);
+        
+        if (monthStart >= startDate && monthEnd <= endDate) {
+            const monthlyPayments = allPayments.filter(payment => {
+                const paymentDate = new Date(payment.paymentDate);
+                return paymentDate >= monthStart && paymentDate <= monthEnd;
+            });
+            
+            monthlyData.push({
+                month: months[i],
+                count: monthlyPayments.length,
+                amount: monthlyPayments.reduce((sum, payment) => sum + payment.amountPaid, 0),
+                principal: monthlyPayments.reduce((sum, payment) => sum + payment.principal, 0),
+                interest: monthlyPayments.reduce((sum, payment) => sum + payment.interest, 0)
+            });
+        }
+    }
+    
+    return {
+        totalPayments,
+        totalAmount,
+        totalPrincipal,
+        totalInterest,
+        paymentsByMethod,
+        monthlyData
+    };
+}
+
+async function generateUserActivityReport(startDate, endDate) {
+    const userActivities = await User.aggregate([
+        {
+            $match: {
+                lastLogin: { $gte: startDate, $lte: endDate }
+            }
+        },
+        {
+            $lookup: {
+                from: 'loans',
+                localField: '_id',
+                foreignField: 'createdBy',
+                as: 'createdLoans'
+            }
+        },
+        {
+            $lookup: {
+                from: 'loans',
+                localField: '_id',
+                foreignField: 'approvedBy',
+                as: 'approvedLoans'
+            }
+        },
+        {
+            $lookup: {
+                from: 'payments',
+                localField: '_id',
+                foreignField: 'processedBy',
+                as: 'processedPayments'
+            }
+        },
+        {
+            $project: {
+                username: 1,
+                fullName: 1,
+                role: 1,
+                lastLogin: 1,
+                loansCreated: { $size: '$createdLoans' },
+                loansApproved: { $size: '$approvedLoans' },
+                paymentsProcessed: { $size: '$processedPayments' }
+            }
+        }
+    ]);
+
+    return {
+        userActivities,
+        totalUsers: userActivities.length,
+        totalLoansCreated: userActivities.reduce((sum, user) => sum + user.loansCreated, 0),
+        totalLoansApproved: userActivities.reduce((sum, user) => sum + user.loansApproved, 0),
+        totalPaymentsProcessed: userActivities.reduce((sum, user) => sum + user.paymentsProcessed, 0)
+    };
+}
+
+async function generateOverdueLoansReport() {
+    const today = new Date();
+    const overduePayments = await Payment.find({
+        dueDate: { $lt: today },
+        status: 'pending'
+    }).populate({
+        path: 'loan',
+        populate: {
+            path: 'borrower',
+            select: 'fullName email phone'
+        }
+    });
+
+    const overdueLoans = overduePayments.reduce((acc, payment) => {
+        const loanId = payment.loan._id.toString();
+        if (!acc[loanId]) {
+            acc[loanId] = {
+                loanId: loanId,
+                borrower: {
+                    fullName: payment.loan.borrower.fullName,
+                    email: payment.loan.borrower.email,
+                    phone: payment.loan.borrower.phone
+                },
+                totalOverdue: 0,
+                payments: []
+            };
+        }
+        acc[loanId].totalOverdue += payment.amountDue;
+        acc[loanId].payments.push({
+            paymentNumber: payment.paymentNumber,
+            dueDate: payment.dueDate,
+            amountDue: payment.amountDue
+        });
+        return acc;
+    }, {});
+
+    return {
+        totalOverdueLoans: Object.keys(overdueLoans).length,
+        totalOverdueAmount: Object.values(overdueLoans)
+            .reduce((sum, loan) => sum + loan.totalOverdue, 0),
+        overdueLoans: Object.values(overdueLoans)
+    };
+}
+
+async function generateDisbursementReport(startDate, endDate) {
+    const disbursedLoans = await Loan.find({
+        disbursementDate: { $gte: startDate, $lte: endDate }
+    }).populate('borrower', 'fullName');
+
+    const totalDisbursed = disbursedLoans.length;
+    const totalAmount = disbursedLoans.reduce((sum, loan) => sum + loan.amount, 0);
+
+    const disbursementsByMethod = {};
+    for (const loan of disbursedLoans) {
+        const method = loan.disbursementMethod;
+        if (!disbursementsByMethod[method]) {
+            disbursementsByMethod[method] = {
+                count: 0,
+                amount: 0
+            };
+        }
+        disbursementsByMethod[method].count++;
+        disbursementsByMethod[method].amount += loan.amount;
+    }
+
+    const monthlyData = [];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    for (let i = 0; i < 12; i++) {
+        const monthStart = new Date(startDate.getFullYear(), i, 1);
+        const monthEnd = new Date(startDate.getFullYear(), i + 1, 0, 23, 59, 59);
+
+        if (monthStart >= startDate && monthEnd <= endDate) {
+            const monthlyDisbursements = disbursedLoans.filter(loan => {
+                const disbursementDate = new Date(loan.disbursementDate);
+                return disbursementDate >= monthStart && disbursementDate <= monthEnd;
+            });
+
+            monthlyData.push({
+                month: months[i],
+                count: monthlyDisbursements.length,
+                amount: monthlyDisbursements.reduce((sum, loan) => sum + loan.amount, 0)
+            });
+        }
+    }
+
+    return {
+        totalDisbursed,
+        totalAmount,
+        disbursementsByMethod,
+        monthlyData
+    };
+}
+
+// Error handling middleware
+app.use((req, res, next) => {
+    res.status(404).json({ message: 'Route not found' });
+});
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something broke!' });
+});
+
+// Start the server
+const server = app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+// Create admin user if none exists
+async function createAdminUser() {
+    try {
+        const adminExists = await User.findOne({ role: 'admin' });
+        
+        if (!adminExists) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash('Qwerty12345', salt);
+            
+            const admin = new User({
+                username: 'admin',
+                password: hashedPassword,
+                fullName: 'System Administrator',
+                email: 'admin@washaenterprises.com',
+                role: 'admin'
+            });
+            
+            await admin.save();
+            console.log('Admin user created successfully.');
+        }
+    } catch (error) {
+        console.error('Error creating admin user:', error);
+    }
+}
+
+module.exports = app;

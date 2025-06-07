@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Washa Enterprises</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Mobile Navbar (visible only on small screens) -->
+    <nav class="mobile-navbar">
+        <div class="mobile-navbar-content">
+            <h1 class="mobile-navbar-title">Washa Enterprises</h1>
+            <div class="mobile-navbar-actions">
+                <a href="#" id="mobile-change-password-btn" class="mobile-navbar-action">
+                    <i class="fas fa-key"></i>
+                </a>
+                <a href="#" id="mobile-logout-btn" class="mobile-navbar-action">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+                <button id="mobile-sidebar-toggle" class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>Washa Enterprises</h2>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="user-management.html">
+                        <i class="fas fa-users"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="loan-management.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Loans</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="payment-processing.html">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Payments</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="reports.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" id="change-password-btn">
+                    <i class="fas fa-key"></i>
+                    <span>Change Password</span>
+                </a>
+                <a href="#" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="user-info">
+                    <span id="user-name">Admin User</span>
+                    <span id="user-role">Administrator</span>
+                </div>
+            </header>
+
+            <div class="reports-container">
+                <div class="page-header">
+                    <h1>Reports & Analytics</h1>
+                    <div class="action-buttons">
+                        <button id="export-report-btn" class="btn btn-secondary">
+                            <i class="fas fa-file-export"></i> Export Report
+                        </button>
+                        <button id="print-report-btn" class="btn btn-secondary">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Report Selection -->
+                <div class="report-selection">
+                    <div class="form-group">
+                        <label for="report-type">Report Type</label>
+                        <select id="report-type" name="report-type">
+                            <option value="loan_summary">Loan Summary</option>
+                            <option value="payment_history">Payment History</option>
+                            <option value="user_activity">User Activity</option>
+                            <option value="overdue_loans">Overdue Loans</option>
+                            <option value="disbursement_report">Disbursement Report</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-range">Date Range</label>
+                        <select id="date-range" name="date-range">
+                            <option value="today">Today</option>
+                            <option value="this_week">This Week</option>
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="this_year">This Year</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                    <div class="form-group custom-date-range" id="custom-date-range">
+                        <div class="date-inputs">
+                            <div>
+                                <label for="start-date">Start Date</label>
+                                <input type="date" id="start-date" name="start-date">
+                            </div>
+                            <div>
+                                <label for="end-date">End Date</label>
+                                <input type="date" id="end-date" name="end-date">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Form actions removed as reports now generate automatically -->
+                </div>
+
+                <!-- Report Content -->
+                <div class="report-content" id="report-content">
+                    <div class="report-loading" id="report-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Generating report...</p>
+                    </div>
+                    
+                    <div class="report-data" id="report-data">
+                        <!-- Will be populated dynamically -->
+                        <div class="report-placeholder">
+                            <i class="fas fa-chart-line"></i>
+                            <p>Select a report type and date range, then click "Generate Report" to view data.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section" id="charts-section">
+                    <div class="chart-container">
+                        <h2 id="chart1-title">Chart 1</h2>
+                        <canvas id="chart1"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h2 id="chart2-title">Chart 2</h2>
+                        <canvas id="chart2"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Options Modal -->
+            <div class="modal" id="export-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Export Report</h2>
+                        <button class="close-btn" id="close-export-modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="export-options">
+                            <div class="export-option">
+                                <input type="radio" id="export-pdf" name="export-format" value="pdf" checked>
+                                <label for="export-pdf">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span>PDF Document</span>
+                                </label>
+                            </div>
+                            <div class="export-option">
+                                <input type="radio" id="export-excel" name="export-format" value="excel">
+                                <label for="export-excel">
+                                    <i class="fas fa-file-excel"></i>
+                                    <span>Excel Spreadsheet</span>
+                                </label>
+                            </div>
+                            <div class="export-option">
+                                <input type="radio" id="export-csv" name="export-format" value="csv">
+                                <label for="export-csv">
+                                    <i class="fas fa-file-csv"></i>
+                                    <span>CSV File</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancel-export">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="confirm-export">Export</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/reports.js"></script>
+    <script>
+        // Toggle mobile sidebar
+        document.getElementById('mobile-sidebar-toggle')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

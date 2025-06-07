@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Active Sessions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .session-card {
+            transition: all 0.3s ease;
+        }
+        .session-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #0d6efd;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .session-active {
+            border-left: 4px solid #198754;
+        }
+        .session-expired {
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Washa Enterprises</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin-sessions.html">Active Sessions</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <span class="text-white me-3" id="current-user"></span>
+                    <button class="btn btn-outline-light" id="logout-btn">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-people-fill me-2"></i> Active Sessions</h2>
+            <button class="btn btn-primary" id="refresh-sessions">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+        </div>
+
+        <div class="row" id="sessions-container">
+            <div class="col-12">
+                <div class="text-center my-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading active sessions...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get DOM elements
+        const sessionsContainer = document.getElementById('sessions-container');
+        const refreshBtn = document.getElementById('refresh-sessions');
+        const currentUserElement = document.getElementById('current-user');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // Check authentication
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'index.html';
+        }
+
+        // Set current user info
+        fetch('/api/auth/me', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Not authenticated');
+            }
+            return response.json();
+        })
+        .then(user => {
+            currentUserElement.textContent = `Welcome, ${user.fullName || user.username}`;
+        })
+        .catch(() => {
+            window.location.href = 'index.html';
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(() => {
+                localStorage.removeItem('token');
+                window.location.href = 'index.html';
+            });
+        });
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            return new Date(dateString).toLocaleString('en-US', options);
+        }
+
+        // Format time remaining
+        function formatTimeRemaining(expiresAt) {
+            const now = new Date();
+            const expiry = new Date(expiresAt);
+            const diffMs = expiry - now;
+            
+            if (diffMs <= 0) return 'Expired';
+            
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMins / 60);
+            const days = Math.floor(diffHours / 24);
+            const hours = diffHours % 24;
+            const mins = diffMins % 60;
+            
+            let result = [];
+            if (days > 0) result.push(`${days}d`);
+            if (hours > 0) result.push(`${hours}h`);
+            if (mins > 0) result.push(`${mins}m`);
+            
+            return result.length > 0 ? result.join(' ') : 'Less than a minute';
+        }
+
+        // Get browser icon
+        function getBrowserIcon(userAgent) {
+            userAgent = userAgent.toLowerCase();
+            if (userAgent.includes('chrome')) return 'bi-globe';
+            if (userAgent.includes('firefox')) return 'bi-fire';
+            if (userAgent.includes('safari')) return 'bi-globe';
+            if (userAgent.includes('edge')) return 'bi-microsoft';
+            if (userAgent.includes('opera')) return 'bi-browser-edge';
+            return 'bi-laptop';
+        }
+
+        // Get OS icon
+        function getOSIcon(userAgent) {
+            userAgent = userAgent.toLowerCase();
+            if (userAgent.includes('windows')) return 'bi-windows';
+            if (userAgent.includes('mac')) return 'bi-apple';
+            if (userAgent.includes('linux')) return 'bi-ubuntu';
+            if (userAgent.includes('android')) return 'bi-android2';
+            if (userAgent.includes('iphone') || userAgent.includes('ipad')) return 'bi-apple';
+            return 'bi-pc-display';
+        }
+
+        // Render sessions
+        function renderSessions(sessions) {
+            if (sessions.length === 0) {
+                sessionsContainer.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            No active sessions found.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+
+            const sessionsHTML = sessions.map(session => {
+                const isActive = new Date(session.session.expiresAt) > new Date();
+                const timeRemaining = formatTimeRemaining(session.session.expiresAt);
+                const lastActivity = formatDate(session.session.lastActivity);
+                const expiresAt = formatDate(session.session.expiresAt);
+                const initials = session.fullName 
+                    ? session.fullName.split(' ').map(n => n[0]).join('').toUpperCase()
+                    : session.username.substring(0, 2).toUpperCase();
+
+                return `
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100 session-card ${isActive ? 'session-active' : 'session-expired'}">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="user-avatar me-3">${initials}</div>
+                                    <div>
+                                        <h5 class="card-title mb-0">${session.fullName || session.username}</h5>
+                                        <span class="badge bg-${session.role === 'admin' ? 'danger' : 'primary'}">
+                                            ${session.role}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <i class="bi ${getBrowserIcon(session.session.userAgent)} me-2"></i>
+                                    ${session.session.userAgent || 'Unknown browser'}
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <i class="bi ${getOSIcon(session.session.userAgent)} me-2"></i>
+                                    ${session.session.ipAddress || 'Unknown IP'}
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <i class="bi bi-clock me-2"></i>
+                                    Last activity: ${lastActivity}
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <i class="bi bi-hourglass-split me-2"></i>
+                                    Expires: ${expiresAt}
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <span class="badge bg-${isActive ? 'success' : 'danger'}">
+                                        ${isActive ? `Active (${timeRemaining} left)` : 'Expired'}
+                                    </span>
+                                    <button class="btn btn-sm btn-outline-danger" 
+                                            onclick="forceLogout('${session.userId}', '${session.session.token}')"
+                                            ${!isActive ? 'disabled' : ''}>
+                                        <i class="bi bi-box-arrow-right"></i> Force Logout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            sessionsContainer.innerHTML = sessionsHTML;
+        }
+
+        // Load sessions
+        function loadSessions() {
+            sessionsContainer.innerHTML = `
+                <div class="col-12">
+                    <div class="text-center my-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading active sessions...</p>
+                    </div>
+                </div>
+            `;
+
+            fetch('/api/admin/active-sessions', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load sessions');
+                }
+                return response.json();
+            })
+            .then(sessions => {
+                renderSessions(sessions);
+            })
+            .catch(error => {
+                console.error('Error loading sessions:', error);
+                sessionsContainer.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Failed to load sessions. Please try again later.
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Force logout a session
+        window.forceLogout = async (userId, sessionToken) => {
+            if (!confirm('Are you sure you want to force logout this session?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/force-logout/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: sessionToken })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to force logout');
+                }
+
+                alert('Session terminated successfully');
+                loadSessions();
+            } catch (error) {
+                console.error('Error forcing logout:', error);
+                alert('Failed to force logout. Please try again.');
+            }
+        };
+
+        // Event listeners
+        refreshBtn.addEventListener('click', loadSessions);
+
+        // Initial load
+        loadSessions();
+    </script>
+</body>
+</html>

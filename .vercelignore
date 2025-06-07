@@ -1,0 +1,12 @@
+node_modules
+.env
+.env.local
+.env.production.local
+.env.development.local
+old-data
+scripts
+README.md
+architecture.md
+update_nav.sh
+*.log
+.DS_Store

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Washa Enterprises Loan Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <div class="logo">
+                <h1>Washa Enterprises</h1>
+                <p>Loan Management System</p>
+            </div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="password" name="password" required>
+                        <span class="password-toggle" onclick="togglePasswordVisibility()">
+                            <i class="fas fa-eye" id="togglePassword"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+                <div class="forgot-password">
+                    <a href="#" onclick="showPasswordRecovery()">Forgot Password?</a>
+                </div>
+                <div class="error-message" id="loginError"></div>
+            </form>
+            
+            <!-- Password Recovery Modal -->
+            <div id="passwordRecoveryModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Password Recovery</h2>
+                    <form id="passwordRecoveryForm">
+                        <div class="input-group">
+                            <label for="recovery-email">Email Address</label>
+                            <input type="email" id="recovery-email" name="email" required>
+                        </div>
+                        <div class="input-group">
+                            <button type="submit" class="btn btn-primary">Reset Password</button>
+                        </div>
+                        <div class="error-message" id="recoveryError"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

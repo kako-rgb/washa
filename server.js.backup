@@ -1,0 +1,412 @@
+// Backend API for Washa Enterprises Loan Management System
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+const csv = require('csv-parser');
+const fs = require('fs');
+const path = require('path');
+
+// Load environment variables
+dotenv.config();
+
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Middleware
+app.use(cors({
+    origin: ['http://localhost', 'http://127.0.0.1', 'http://127.0.0.1:5500'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(bodyParser.json());
+app.use(express.static('.'));
+
+// MongoDB Atlas Connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://kakotechnology:Gladyswi11y2020@cluster0.dfv4h.mongodb.net/?retryWrites=true&w=majority&washa=Cluster0';
+
+let isConnected = false;
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            dbName: 'washaLoans'
+        });
+        isConnected = true;
+        console.log('Connected to MongoDB Atlas');
+        await createAdminUser();
+        return true;
+    } catch (err) {
+        console.error('MongoDB connection error:', err);
+        isConnected = false;
+        return false;
+    }
+};
+
+// Initial connection
+connectDB();
+
+// Reconnect logic
+setInterval(() => {
+    if (!isConnected) {
+        console.log('Attempting to reconnect to MongoDB...');
+        connectDB();
+    }
+}, 30000); // Try to reconnect every 30 seconds
+
+// Define Schemas
+const userSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    fullName: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    role: { type: String, enum: ['admin', 'loan_officer', 'customer'], default: 'customer' },
+    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    createdAt: { type: Date, default: Date.now },
+    lastLogin: { type: Date }
+});
+
+const borrowerSchema = new mongoose.Schema({
+    fullName: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true, unique: true },
+    address: { type: String, required: true },
+    idNumber: { type: String },
+    employmentStatus: { type: String },
+    monthlyIncome: { type: Number, default: 0 },
+    createdAt: { type: Date, default: Date.now },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+});
+
+const loanSchema = new mongoose.Schema({
+    borrower: { type: mongoose.Schema.Types.ObjectId, ref: 'Borrower', required: true },
+    amount: { type: Number, required: true },
+    interestRate: { type: Number, required: true },
+    term: { type: Number, required: true }, // in days
+    purpose: { type: String, required: true },
+    status: { 
+        type: String, 
+        enum: ['pending', 'approved', 'active', 'completed', 'rejected', 'defaulted'], 
+        default: 'pending' 
+    },
+    approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    approvedDate: { type: Date },
+    disbursementDate: { type: Date },
+    disbursementMethod: { type: String, enum: ['bank_transfer', 'mobile_money', 'cash'] },
+    startDate: { type: Date },
+    endDate: { type: Date },
+    createdAt: { type: Date, default: Date.now },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    notes: { type: String },
+    source: { type: String, default: 'system' },
+    externalId: { type: String }
+});
+
+// Create models
+const User = mongoose.model('User', userSchema);
+const Borrower = mongoose.model('Borrower', borrowerSchema);
+const Loan = mongoose.model('Loan', loanSchema);
+
+// JWT Secret
+const JWT_SECRET = process.env.JWT_SECRET || 'washa-enterprises-secret-key';
+
+// Authentication Middleware
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
+    
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Invalid token.' });
+        req.user = user;
+        next();
+    });
+};
+
+// Role-based Authorization Middleware
+const authorize = (roles = []) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
+        }
+        next();
+    };
+};
+
+// Database status endpoint
+app.get('/api/db/status', (req, res) => {
+    res.json({ connected: isConnected });
+});
+
+// Import CSV data
+app.post('/api/import/loans', authenticateToken, authorize(['admin']), async (req, res) => {
+    try {
+        if (!isConnected) {
+            return res.status(503).json({ message: 'Database not connected' });
+        }
+
+        const csvFilePath = path.join(__dirname, '../opt/lampp/htdocs/lms-washa/old-data/updated loans.csv');
+        const results = [];
+        
+        // Read and parse the CSV file
+        fs.createReadStream(csvFilePath)
+            .pipe(csv())
+            .on('data', (data) => results.push(data))
+            .on('end', async () => {
+                try {
+                    // Process and save to database
+                    for (const row of results) {
+                        // Format the date
+                        let loanDate = new Date();
+                        const dateMatch = row['date of borrowing'] ? row['date of borrowing'].match(/\d+/g) : null;
+                        if (dateMatch && dateMatch.length >= 2) {
+                            const day = parseInt(dateMatch[0]);
+                            const month = new Date(Date.parse(dateMatch[1] + ' 1, 2012')).getMonth();
+                            loanDate = new Date(2025, month, day);
+                        }
+
+                        // Create or find borrower
+                        let borrower = await Borrower.findOne({ phone: row['phone number'] });
+                        if (!borrower) {
+                            borrower = new Borrower({
+                                fullName: row['Full Names'],
+                                phone: row['phone number'],
+                                email: `${row['Full Names'].toLowerCase().replace(/\s+/g, '.')}@example.com`,
+                                address: 'N/A',
+                                employmentStatus: 'Unknown',
+                                createdBy: req.user.id
+                            });
+                            await borrower.save();
+                        }
+
+                        // Create loan
+                        const amount = parseFloat(row['Amount borrowed']) || 0;
+                        const loan = new Loan({
+                            borrower: borrower._id,
+                            amount: amount,
+                            interestRate: 10, // Default 10% interest
+                            term: 30, // Default 30 days
+                            purpose: 'General',
+                            status: 'active',
+                            approvedBy: req.user.id,
+                            approvedDate: new Date(),
+                            startDate: loanDate,
+                            endDate: new Date(loanDate.getTime() + 30 * 24 * 60 * 60 * 1000), // 30 days from start
+                            createdBy: req.user.id,
+                            notes: 'Imported from legacy system',
+                            source: 'legacy_import'
+                        });
+                        
+                        await loan.save();
+                    }
+                    
+                    res.json({ message: `Successfully imported ${results.length} loans` });
+                } catch (error) {
+                    console.error('Error importing data:', error);
+                    res.status(500).json({ message: 'Error importing data', error: error.message });
+                }
+            });
+    } catch (error) {
+        console.error('Error reading CSV file:', error);
+        res.status(500).json({ message: 'Error reading CSV file', error: error.message });
+    }
+});
+
+// Get loans with fallback to local data
+app.get('/api/loans/with-fallback', async (req, res) => {
+    try {
+        if (isConnected) {
+            const loans = await Loan.find()
+                .populate('borrower', 'fullName phone')
+                .sort({ createdAt: -1 });
+            return res.json({ source: 'database', data: loans });
+        }
+        
+        // Fallback to local CSV data
+        const csvFilePath = path.join(__dirname, '../opt/lampp/htdocs/lms-washa/old-data/updated loans.csv');
+        const results = [];
+        
+        fs.createReadStream(csvFilePath)
+            .pipe(csv())
+            .on('data', (data) => results.push({
+                id: `local-${results.length + 1}`,
+                borrower: {
+                    fullName: data['Full Names'],
+                    phone: data['phone number']
+                },
+                amount: parseFloat(data['Amount borrowed']) || 0,
+                startDate: data['date of borrowing'] || 'N/A',
+                status: 'active',
+                source: 'local',
+                interestRate: 10,
+                term: 30
+            }))
+            .on('end', () => {
+                res.json({ source: 'local', data: results });
+            });
+    } catch (error) {
+        console.error('Error getting loans:', error);
+        res.status(500).json({ message: 'Error fetching loans', error: error.message });
+    }
+});
+
+// Create admin user if none exists
+async function createAdminUser() {
+    try {
+        const adminExists = await User.findOne({ username: 'admin' });
+        if (!adminExists) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash('Qwerty12345', salt);
+            
+            const admin = new User({
+                username: 'admin',
+                password: hashedPassword,
+                fullName: 'Administrator',
+                email: 'admin@washenterprises.com',
+                role: 'admin',
+                status: 'active'
+            });
+            
+            await admin.save();
+            console.log('Admin user created');
+        }
+    } catch (error) {
+        console.error('Error creating admin user:', error);
+    }
+}
+
+// User Registration
+app.post('/api/auth/register', async (req, res) => {
+    try {
+        const { username, password, fullName, email, role = 'customer' } = req.body;
+
+        // Check if user already exists
+        let user = await User.findOne({ username });
+        if (user) {
+            return res.status(400).json({ message: 'Username already exists' });
+        }
+
+        // Check if email is already registered
+        user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ message: 'Email already registered' });
+        }
+
+        // Create new user
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        user = new User({
+            username,
+            password: hashedPassword,
+            fullName,
+            email,
+            role
+        });
+
+        await user.save();
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user._id, username: user.username, role: user.role },
+            JWT_SECRET,
+            { expiresIn: '1d' }
+        );
+
+        res.status(201).json({
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Server error during registration' });
+    }
+});
+
+// User Login
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Check if user exists
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Check password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Check if user is active
+        if (user.status !== 'active') {
+            return res.status(403).json({ message: 'Account is inactive. Please contact support.' });
+        }
+
+        // Update last login
+        user.lastLogin = new Date();
+        await user.save();
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user._id, username: user.username, role: user.role },
+            JWT_SECRET,
+            { expiresIn: '1d' }
+        );
+
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Server error during login' });
+    }
+});
+
+// Get current user profile
+app.get('/api/auth/me', authenticateToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        console.error('Profile error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Start the server
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+module.exports = app;
